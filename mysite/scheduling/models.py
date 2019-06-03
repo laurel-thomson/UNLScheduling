@@ -17,8 +17,8 @@ class RoomTerm(models.Model):
 
 class TimeSlot(models.Model):
     day = models.CharField('Day', max_length=50)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     room_term_id = models.ForeignKey(RoomTerm, on_delete=models.CASCADE)
 
 class ScheduledUser(models.Model):
@@ -28,9 +28,9 @@ class ScheduledUser(models.Model):
 class SchedulePreference(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     time_slot_id = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
-    preference_type = models.CharField(max_length=50)
+    preference_type = models.IntegerField()
 
 class RoomPrivilege(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
-    privilege_level = models.CharField(max_length=50)
+    privilege_level = models.IntegerField()

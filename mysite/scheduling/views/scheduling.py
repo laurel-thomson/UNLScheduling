@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 
-from ..models import Room, RoomTerm
+from ..models import Room, RoomTerm, TimeSlot
 
 def index(request):
     return render(request, 'scheduling/index.html')
@@ -20,3 +20,13 @@ class TermListView(ListView):
     def get_queryset(self):
         room = self.kwargs['room_id']
         return RoomTerm.objects.filter(room_id=room)
+
+def term_schedule(request, room_id, term_id):
+    term = get_object_or_404(RoomTerm, pk=term_id)
+    time_slots = term.timeslot_set.all()
+
+    schedule = {}
+    for slot in time_slots:
+        schedule[slot] = slot.scheduleduser_set.all()
+
+    return render(request, 'scheduling/term_schedule.html', {'term':term, 'schedule':schedule})
