@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    {% for room in rooms %}
+    {% for room in object_list %}
         <p>{{ room.name }} </p>
     {% endfor %}
 {% endblock %}
