@@ -2,14 +2,17 @@ from django.urls import path, include
 
 from .views import scheduling, students, teachers
 
+app_name = 'scheduling'
 urlpatterns = [
     path('', scheduling.index, name='index'),
 
     path('students/', include(([
-        path('', students.RoomListView.as_view(), name='student_room_list'),
+        path('', scheduling.RoomListView.as_view(), name='student_room_list'),
+        path('<int:room_id>/', scheduling.TermListView.as_view(), name='student_term_list'),
     ], 'scheduling'), namespace='students')),
 
     path('teachers/', include(([
-        path('', teachers.RoomListView.as_view(), name='teacher_room_list'),
+        path('', scheduling.RoomListView.as_view(), name='teacher_room_list'),
+        path('<int:room_id>/', scheduling.TermListView.as_view(), name='teacher_term_list'),
     ], 'scheduling'), namespace='teachers')),
 ]
