@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% for room in rooms %}
+        <p>{{ room.name }} </p>
+    {% endfor %}
+{% endblock %}
