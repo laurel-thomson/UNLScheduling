@@ -24,9 +24,13 @@ class TermListView(ListView):
 def term_schedule(request, room_id, term_id):
     term = get_object_or_404(RoomTerm, pk=term_id)
     time_slots = term.timeslot_set.all()
-
     schedule = {}
-    for slot in time_slots:
-        schedule[slot] = slot.scheduleduser_set.all()
 
-    return render(request, 'scheduling/term_schedule.html', {'term':term, 'schedule':schedule})
+    if (term.schedule_completed):
+        for slot in time_slots:
+            schedule[slot] = slot.scheduleduser_set.all()
+        return render(request, 'scheduling/finalized_schedule.html', {'term':term, 'schedule':schedule})
+    else:
+        for slot in time_slots:
+            schedule[slot] = slot.schedulepreference_set.all()
+        return render(request, 'scheduling/unfinalized_schedule.html', {'term':term, 'schedule':schedule})
