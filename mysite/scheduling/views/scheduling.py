@@ -1,25 +1,20 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 
-from ..models import Room, RoomTerm, TimeSlot
+from ..models import Room, RoomTerm, TimeSlot, User
 
 def index(request):
     return render(request, 'scheduling/index.html')
 
-class RoomListView(ListView):
-    model = Room
-    template_name = 'scheduling/room_list.html'
+def room_list(request):
+    rooms = Room.objects.all()
+    return render(request, 'scheduling/room_list.html', {'rooms': rooms})
 
-    def get_queryset(self):
-        return Room.objects.all()
-
-class TermListView(ListView):
-    model = RoomTerm
-    template_name = 'scheduling/term_list.html'
-
-    def get_queryset(self):
-        room = self.kwargs['room_id']
-        return RoomTerm.objects.filter(room_id=room)
+def room_detail(request, room_id):
+    terms = RoomTerm.objects.filter(room_id=room_id)
+    room = get_object_or_404(Room, pk=room_id)
+    users = User.objects.filter(roomprivilege__room_id = room_id)
+    return render(request, 'scheduling/room_detail.html', {'terms': terms, 'room': room, 'users': users})
 
 def term_schedule(request, room_id, term_id):
     term = get_object_or_404(RoomTerm, pk=term_id)

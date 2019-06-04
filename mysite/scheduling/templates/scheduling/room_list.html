@@ -4,7 +4,7 @@
 
 <h2>Available Rooms</h2>
 
-    {% for room in object_list %}
+    {% for room in rooms %}
     <a href="{{ room.id }}/">{{ room.name }}</a>
     {% endfor %}
     
