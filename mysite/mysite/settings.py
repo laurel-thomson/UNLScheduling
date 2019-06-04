@@ -131,9 +131,9 @@ LOGIN_URL = 'login'
 
 LOGOUT_URL = 'logout'
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'index'
 
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'index'
 
 # Third party apps configuration
 

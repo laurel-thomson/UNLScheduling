@@ -1,14 +1,14 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView
+from django.shortcuts import render, get_object_or_404, redirect
 
 from ..models import Room, RoomTerm, TimeSlot, User
 
 def index(request):
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            return redirect('students/')
+        else:
+            return redirect('teachers/')
     return render(request, 'scheduling/index.html')
-
-def room_list(request):
-    rooms = Room.objects.all()
-    return render(request, 'scheduling/room_list.html', {'rooms': rooms})
 
 def room_detail(request, room_id):
     terms = RoomTerm.objects.filter(room_id=room_id)
