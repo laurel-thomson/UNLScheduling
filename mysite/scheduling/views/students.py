@@ -36,3 +36,30 @@ def room_detail(request, room_id):
     terms = RoomTerm.objects.filter(room_id=room_id)
     room = get_object_or_404(Room, pk=room_id)
     return render(request, 'scheduling/students/room_detail.html', {'terms': terms, 'room': room })
+    
+@login_required
+@student_required
+def term_detail(request, room_id, term_id):
+    #check if the user has privilege for the room - 404 if not
+    privilege = get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
+
+    term = get_object_or_404(RoomTerm, pk=term_id)
+
+    if (term.schedule_completed):
+        return finalized_schedule(request, term)
+    else:
+        return unfinalized_schedule(request, term)
+
+def finalized_schedule(request, term):
+    time_slots = term.timeslot_set.all()
+    schedule = {}
+    for slot in time_slots:
+        schedule[slot] = slot.scheduleduser_set.all()
+    return render(request, 'scheduling/students/finalized_schedule.html', {'term':term, 'schedule':schedule})
+
+def unfinalized_schedule(request, term):
+    time_slots = term.timeslot_set.all()
+    schedule = {}
+    for slot in time_slots:
+        schedule[slot] = slot.schedulepreference_set.filter(user_id=request.user.id)
+    return render(request, 'scheduling/students/unfinalized_schedule.html', {'term':term, 'schedule':schedule})
