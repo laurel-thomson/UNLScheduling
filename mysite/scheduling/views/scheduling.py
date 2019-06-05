@@ -7,11 +7,11 @@ class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
 
 def index(request):
-    # if request.user.is_authenticated:
-    #     if request.user.is_teacher:
-    #         return redirect('students/')
-    #     else:
-    #         return redirect('teachers/')
+    if request.user.is_authenticated:
+        if request.user.is_teacher:
+            return redirect('teachers/')
+        else:
+            return redirect('students/')
     return render(request, 'scheduling/index.html')
 
 def room_detail(request, room_id):
