@@ -6,6 +6,19 @@
     </head>
     <body>
 
+        <h1>UNL Scheduling Website</h1>
+
+        {% if user.is_authenticated %}
+            <p>Logged in as: {{ user.username }}</p>
+            {% if user.is_teacher %}
+            <p>Account type = teacher</p>
+            {% else %}
+            <p>Account type = student</p>
+            {% endif %}
+
+            <p><a href="{% url 'logout' %}">Log out</p>
+        {% endif %}
+
         {% block content %}
         {% endblock %}
 
