@@ -8,13 +8,14 @@
 
     <h3>Time Preferences</h2>
 
-    {% for slot, preferences in schedule.items %}
-        <p>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</p>
-        <ul>
-            {% for pref in preferences %}
-                <li>Preference type = {{ pref.preference_type }}</li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+
+
 
 {% endblock %}

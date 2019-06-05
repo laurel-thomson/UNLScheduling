@@ -5,9 +5,15 @@ class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.username
+
 class Room(models.Model):
     name = models.CharField('Name', max_length=50)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
 
 class RoomTerm(models.Model):
     name = models.CharField('Name', max_length=50)
@@ -15,22 +21,37 @@ class RoomTerm(models.Model):
     available_until = models.DateTimeField()
     schedule_completed = models.BooleanField('Schedule completed', default=False)
 
+    def __str__(self):
+        return self.name
+
 class TimeSlot(models.Model):
     day = models.CharField('Day', max_length=50)
     start_time = models.TimeField()
     end_time = models.TimeField()
     room_term_id = models.ForeignKey(RoomTerm, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "{} - {}".format(self.start_time, self.end_time)
+
 class ScheduledUser(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     time_slot_id = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{}: {}".format(self.user_id, self.time_slot_id)
 
 class SchedulePreference(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     time_slot_id = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
     preference_type = models.IntegerField()
 
+    def __str__(self):
+        return "{}: {}".format(self.user_id, self.time_slot_id)
+
 class RoomPrivilege(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
     privilege_level = models.IntegerField()
+
+    def __str__(self):
+        return "{}: {}".format(self.user_id, self.room_id)

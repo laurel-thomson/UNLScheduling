@@ -24,3 +24,12 @@ class StudentSignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class SubmitTimePreferenceForm(forms.Form):
+    is_bound = False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        schedule = args[0]
+        for slot, pref in schedule.items():
+            self.fields[slot] = forms.BooleanField(required=False, initial=True)

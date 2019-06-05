@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
+from django import forms
 
-from ..forms import StudentSignUpForm
+from ..forms import StudentSignUpForm, SubmitTimePreferenceForm
 from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege
 from ..decorators import student_required
 
@@ -58,8 +59,18 @@ def finalized_schedule(request, term):
     return render(request, 'scheduling/students/finalized_schedule.html', {'term':term, 'schedule':schedule})
 
 def unfinalized_schedule(request, term):
-    time_slots = term.timeslot_set.all()
-    schedule = {}
-    for slot in time_slots:
-        schedule[slot] = slot.schedulepreference_set.filter(user_id=request.user.id)
-    return render(request, 'scheduling/students/unfinalized_schedule.html', {'term':term, 'schedule':schedule})
+    if request.method == 'POST':
+        form = SubmitTimePreferenceForm(request.POST)
+        return redirect('/scheduling/students/')
+    else:
+        time_slots = term.timeslot_set.all()
+        schedule = {}
+        for slot in time_slots:
+            schedule[str(slot)] = len(slot.schedulepreference_set.filter(user_id=request.user.id)) != 0
+        form = SubmitTimePreferenceForm(schedule)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'scheduling/students/unfinalized_schedule.html', context)
