@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from scheduling.views import students, teachers
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('scheduling/', include('scheduling.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/signup/student/', students.StudentSignUpView.as_view(), name='student_signup'),
+    path('accounts/signup/teacher/', teachers.TeacherSignUpView.as_view(), name='teacher_signup'),
 ]
