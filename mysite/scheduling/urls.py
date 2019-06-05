@@ -2,7 +2,6 @@ from django.urls import path, include
 
 from .views import scheduling, students, teachers
 
-app_name = 'scheduling'
 urlpatterns = [
     path('', scheduling.index, name='index'),
 
