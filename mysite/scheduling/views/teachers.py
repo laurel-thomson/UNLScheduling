@@ -31,6 +31,8 @@ def room_list(request):
 @login_required
 @teacher_required
 def room_detail(request, room_id):
+    #check if the user has privilege for the room - 404 if not
+    privilege = get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     terms = RoomTerm.objects.filter(room_id=room_id)
     room = get_object_or_404(Room, pk=room_id)
     users = User.objects.filter(roomprivilege__room_id = room_id)
