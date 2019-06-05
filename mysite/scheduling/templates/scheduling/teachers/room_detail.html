@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Available Terms</h2>
+
+{% for term in terms %}
+    <p><a href="{{ term.id }}/">{{ term.name }}</a></p>
+{% endfor %}
+
+<h2>Users in Room</h2>
+<p>Owner: {{ room.owner }}
+
+<h3>Other Users in Room</h3>
+{% for user in users %}
+    <p>{{ user.username }}</a></p>
+{% endfor %}
+
+{% endblock %}

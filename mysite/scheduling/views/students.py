@@ -27,3 +27,10 @@ class StudentSignUpView(CreateView):
 def room_list(request):
     rooms = Room.objects.filter(roomprivilege__user_id = request.user.id)
     return render(request, 'scheduling/students/room_list.html', {'rooms': rooms})
+
+@login_required
+@student_required
+def room_detail(request, room_id):
+    terms = RoomTerm.objects.filter(room_id=room_id)
+    room = get_object_or_404(Room, pk=room_id)
+    return render(request, 'scheduling/students/room_detail.html', {'terms': terms, 'room': room })
