@@ -25,5 +25,5 @@ class TeacherSignUpView(CreateView):
 @login_required
 @teacher_required
 def room_list(request):
-    rooms = Room.objects.all()
+    rooms = Room.objects.filter(roomprivilege__user_id = request.user.id)
     return render(request, 'scheduling/teachers/room_list.html', {'rooms': rooms})

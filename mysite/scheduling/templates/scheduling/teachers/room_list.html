@@ -4,8 +4,6 @@
 
 <h2>Available Rooms</h2>
 
-<p>Viewing as a teacher</p>
-
     {% for room in rooms %}
     <a href="{{ room.id }}/">{{ room.name }}</a>
     {% endfor %}
