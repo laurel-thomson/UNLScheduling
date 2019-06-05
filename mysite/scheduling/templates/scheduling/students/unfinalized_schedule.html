@@ -9,13 +9,13 @@
     <h3>Time Preferences</h2>
 
     <form action="" method="post">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
+        {% for slot, pref in schedule.items %}
+            <label for = "slot{{slot.id}}">{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</label>
+            <input id = "slot{{slot.id}}" type = "text" value="{{pref.preference_type}}">
+        {% endfor %}
+
         <input type="submit" value="Submit">
     </form>
-
 
 
 {% endblock %}
