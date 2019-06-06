@@ -46,15 +46,15 @@ def room_detail(request, room_id):
         return HttpResponseRedirect('')
     else:
         terms = RoomTerm.objects.filter(room_id=room_id)
-        users = User.objects.filter(roomprivilege__room_id = room_id)
-        all_users = User.objects.all()
-        return render(request, 'scheduling/teachers/room_detail.html', {'terms': terms, 'room': room, 'users': users, 'all_users': all_users})
+        privileged_users = User.objects.filter(roomprivilege__room_id = room_id)
+        unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True)
+        return render(request, 'scheduling/teachers/room_detail.html', {'terms': terms, 'room': room, 'privileged_users': privileged_users, 'unprivileged_users': unprivileged_users})
 
 @login_required
 @teacher_required
 def term_detail(request, room_id, term_id):
     #check if the user has privilege for the room - 404 if not
-    privilege = get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
+    get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
 
     term = get_object_or_404(RoomTerm, pk=term_id)
     if (term.schedule_completed):
@@ -112,3 +112,12 @@ def delete_room(request, room_id):
     room = get_object_or_404(Room,pk=room_id, owner=request.user.id)
     room.delete()
     return redirect('/scheduling/teachers/')
+
+@login_required
+@teacher_required
+def remove_user(request, room_id, user_id):
+    #send a 404 if the user deleting isn't the owner of the room
+    room = get_object_or_404(Room,pk=room_id, owner=request.user.id)
+    privilege = get_object_or_404(RoomPrivilege, room_id=room_id, user_id=user_id)
+    privilege.delete()
+    return redirect('/scheduling/teachers/{}'.format(room_id))
