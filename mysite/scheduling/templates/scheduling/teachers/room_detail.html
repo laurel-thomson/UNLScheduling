@@ -11,12 +11,28 @@
 <h2>Users in Room</h2>
 <p>Owner: {{ room.owner }}
 
-<h3>Other Users in Room</h3>
+<h3>All Users in Room</h3>
 {% for user in users %}
     <p>{{ user.username }}</a></p>
 {% endfor %}
 
+<h3>Add more users to the room</h3>
+<form action="" method="POST">
+    {% csrf_token %}
+    <select name="users">
+        {% for user in all_users %}
+            <option value="{{user.id}}">{{user.username}}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Submit">
+</form>
+
 <br>
 <p><a href="{% url 'teachers:create_term' room.id %}">Create New Term</a></p>
+<br>
+
+{% if room.owner.id == user.id %}
+    <p><a href="delete" onclick="return confirm('Are you sure?')">Delete this Room</a></p>
+{% endif %}
 
 {% endblock %}

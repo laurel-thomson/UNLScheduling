@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
+import logging
 
 from ..forms import TeacherSignUpForm, RoomForm, TermForm
 from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege
 from ..decorators import teacher_required
 
+logger = logging.getLogger(__name__)
 
 class TeacherSignUpView(CreateView):
     model = User
@@ -32,11 +35,20 @@ def room_list(request):
 @teacher_required
 def room_detail(request, room_id):
     #check if the user has privilege for the room - 404 if not
-    privilege = get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
-    terms = RoomTerm.objects.filter(room_id=room_id)
+    get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     room = get_object_or_404(Room, pk=room_id)
-    users = User.objects.filter(roomprivilege__room_id = room_id)
-    return render(request, 'scheduling/teachers/room_detail.html', {'terms': terms, 'room': room, 'users': users})
+
+    if request.method == 'POST':
+        user_id = request.POST.get('users')
+        user = get_object_or_404(User, pk=user_id)
+        privilege = RoomPrivilege(user_id = user, room_id=room, privilege_level = 1)
+        privilege.save()
+        return HttpResponseRedirect('')
+    else:
+        terms = RoomTerm.objects.filter(room_id=room_id)
+        users = User.objects.filter(roomprivilege__room_id = room_id)
+        all_users = User.objects.all()
+        return render(request, 'scheduling/teachers/room_detail.html', {'terms': terms, 'room': room, 'users': users, 'all_users': all_users})
 
 @login_required
 @teacher_required
@@ -45,7 +57,6 @@ def term_detail(request, room_id, term_id):
     privilege = get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
 
     term = get_object_or_404(RoomTerm, pk=term_id)
-
     if (term.schedule_completed):
         return finalized_schedule(request, term)
     else:
@@ -93,3 +104,11 @@ def create_term(request, room_id):
     else:
         form = TermForm()
         return render(request, 'scheduling/teachers/create_update_term.html', {'form': form})
+
+@login_required
+@teacher_required
+def delete_room(request, room_id):
+    #send a 404 if the user deleting isn't the owner of the room
+    room = get_object_or_404(Room,pk=room_id, owner=request.user.id)
+    room.delete()
+    return redirect('/scheduling/teachers/')

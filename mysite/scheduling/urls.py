@@ -16,6 +16,7 @@ urlpatterns = [
         path('create_room/', teachers.create_room, name='create_room'),
         path('<int:room_id>/create_term/', teachers.create_term, name='create_term'),
         path('<int:room_id>/', teachers.room_detail, name='room_detail'),
+        path('<int:room_id>/delete/', teachers.delete_room, name='delete_room'),
         path('<int:room_id>/<int:term_id>/', teachers.term_detail, name='term_detail'),
     ], 'scheduling'), namespace='teachers')),
 ]
