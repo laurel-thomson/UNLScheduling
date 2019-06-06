@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 
-from ..forms import TeacherSignUpForm, RoomForm
+from ..forms import TeacherSignUpForm, RoomForm, TermForm
 from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege
 from ..decorators import teacher_required
 
@@ -55,7 +55,7 @@ def finalized_schedule(request, term):
     time_slots = term.timeslot_set.all()
     schedule = {}
     for slot in time_slots:
-        schedule[slot] = slot.scheduleduser_set.all()
+        schedule[slot] = slot.scheduleduseuserr_set.all()
     return render(request, 'scheduling/teachers/finalized_schedule.html', {'term':term, 'schedule':schedule})
 
 def unfinalized_schedule(request, term):
@@ -79,3 +79,17 @@ def create_room(request):
     else:
         form = RoomForm()
         return render(request, 'scheduling/teachers/create_update_room.html', {'form': form})
+
+@login_required
+@teacher_required
+def create_term(request, room_id):
+    if request.method == 'POST':
+        privilege = get_object_or_404(RoomPrivilege, room_id=room_id, user_id=request.user.id)
+        room = get_object_or_404(Room, pk=room_id)
+        term = RoomTerm(room_id = room, schedule_completed=False)
+        form = TermForm(request.POST, instance=term)
+        form.save()
+        return redirect('/scheduling/teachers/{}/'.format(room_id))
+    else:
+        form = TermForm()
+        return render(request, 'scheduling/teachers/create_update_term.html', {'form': form})

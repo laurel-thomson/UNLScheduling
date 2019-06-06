@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import User, Room
+from .models import User, Room, RoomTerm
 
 class TeacherSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -35,3 +35,19 @@ class RoomForm(ModelForm):
     class Meta:
         model = Room
         fields = ('name',)
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+#Creates or updates a term
+class TermForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TermForm, self).__init__(*args, **kwargs)
+        self.fields['name'].required = True
+
+    class Meta:
+        model = RoomTerm
+        fields = ('name', 'available_until')
+        widgets = {
+            'available_until': DateInput(),
+        }

@@ -16,4 +16,7 @@
     <p>{{ user.username }}</a></p>
 {% endfor %}
 
+<br>
+<p><a href="{% url 'teachers:create_term' room.id %}">Create New Term</a></p>
+
 {% endblock %}
