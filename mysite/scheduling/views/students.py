@@ -3,10 +3,13 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django import forms
+import logging
 
 from ..forms import StudentSignUpForm
-from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege
+from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege, SchedulePreference
 from ..decorators import student_required
+
+logger = logging.getLogger(__name__)
 
 class StudentSignUpView(CreateView):
     model = User
@@ -60,7 +63,22 @@ def finalized_schedule(request, term):
 
 def unfinalized_schedule(request, term):
     if request.method == 'POST':
-        #get data from form
+        slots = term.timeslot_set.all()
+        for slot in slots:
+            pref_type = request.POST.get(str(slot.id))
+            user = User.objects.get(pk=request.user.id)
+            if pref_type:
+                try:
+                    pref = SchedulePreference.objects.get(user_id = request.user.id, time_slot_id = slot.id)
+                    pref.preference_type = pref_type
+                    pref.save()
+                except:
+                    logger.error("PREFERENCE NOT FOUND.  User name = {}, Slot name = {}".format(request.user.username, slot.start_time))
+                    pref = SchedulePreference(user_id = user, time_slot_id = slot, preference_type = pref_type)
+                    pref.save()
+            else:
+                #delete all preferences matching this user and this time slot
+                SchedulePreference.objects.filter(user_id = request.user.id, time_slot_id = slot.id).delete()
         return redirect('/scheduling/students/')
     else:
         time_slots = term.timeslot_set.all()

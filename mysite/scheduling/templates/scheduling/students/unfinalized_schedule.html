@@ -8,13 +8,16 @@
 
     <h3>Time Preferences</h2>
 
+    {% load crispy_forms_tags %}
+
     <form action="" method="post">
+        {% csrf_token %}
         {% for slot, pref in schedule.items %}
-            <label for = "slot{{slot.id}}">{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</label>
-            <input id = "slot{{slot.id}}" type = "text" value="{{pref.preference_type}}">
+            <label for = "{{slot.id}}">{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</label>
+            <input id = "{{slot.id}}" name="{{slot.id}}" type = "number" value="{{pref.preference_type}}">
         {% endfor %}
 
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 
 
