@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 
-from ..forms import TeacherSignUpForm
+from ..forms import TeacherSignUpForm, RoomForm
 from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege
 from ..decorators import teacher_required
 
@@ -64,3 +64,18 @@ def unfinalized_schedule(request, term):
     for slot in time_slots:
         schedule[slot] = slot.schedulepreference_set.all()
     return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'term':term, 'schedule':schedule})
+
+@login_required
+@teacher_required
+def create_room(request):
+    if request.method == 'POST':
+        user = User.objects.get(pk=request.user.id)
+        room = Room(owner=user)
+        form = RoomForm(request.POST, instance=room)
+        form.save()
+        privilege = RoomPrivilege(user_id = user, room_id = room, privilege_level = 2)
+        privilege.save()
+        return redirect('/scheduling/teachers/')
+    else:
+        form = RoomForm()
+        return render(request, 'scheduling/teachers/create_update_room.html', {'form': form})

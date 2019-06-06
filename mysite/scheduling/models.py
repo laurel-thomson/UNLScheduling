@@ -31,7 +31,7 @@ class TimeSlot(models.Model):
     room_term_id = models.ForeignKey(RoomTerm, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} - {}".format(self.start_time, self.end_time)
+        return "{}: {} - {}".format(self.day, self.start_time, self.end_time)
 
 class ScheduledUser(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

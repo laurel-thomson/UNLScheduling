@@ -5,7 +5,10 @@
 <h2>Available Rooms</h2>
 
     {% for room in rooms %}
-    <a href="{{ room.id }}/">{{ room.name }}</a>
+    <p><a href="{{ room.id }}/">{{ room.name }}</a></p>
     {% endfor %}
+
+    <br>
+    <p><a href="{% url 'teachers:create_room' %}">Create New Room</a></p>
     
 {% endblock %}
