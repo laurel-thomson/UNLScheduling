@@ -4,8 +4,9 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 import logging
+import datetime
 
-from ..forms import TeacherSignUpForm, RoomForm, TermForm
+from ..forms import TeacherSignUpForm, RoomForm, TermForm, TimeSlotForm
 from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege
 from ..decorators import teacher_required
 
@@ -55,8 +56,8 @@ def room_detail(request, room_id):
 def term_detail(request, room_id, term_id):
     #check if the user has privilege for the room - 404 if not
     get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
-
     term = get_object_or_404(RoomTerm, pk=term_id)
+
     if (term.schedule_completed):
         return finalized_schedule(request, term)
     else:
@@ -70,11 +71,18 @@ def finalized_schedule(request, term):
     return render(request, 'scheduling/teachers/finalized_schedule.html', {'term':term, 'schedule':schedule})
 
 def unfinalized_schedule(request, term):
-    time_slots = term.timeslot_set.all()
-    schedule = {}
-    for slot in time_slots:
-        schedule[slot] = slot.schedulepreference_set.all()
-    return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'term':term, 'schedule':schedule})
+    if request.method == 'POST':
+        time_slot = TimeSlot(room_term_id = term)
+        form = TimeSlotForm(request.POST, instance=time_slot)
+        form.save()
+        return HttpResponseRedirect('')
+    else:
+        time_slots = term.timeslot_set.all()
+        schedule = {}
+        for slot in time_slots:
+            schedule[slot] = slot.schedulepreference_set.all()
+        form = TimeSlotForm()
+        return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'term':term, 'schedule':schedule, 'form': form})
 
 @login_required
 @teacher_required
@@ -95,7 +103,7 @@ def create_room(request):
 @teacher_required
 def create_term(request, room_id):
     if request.method == 'POST':
-        privilege = get_object_or_404(RoomPrivilege, room_id=room_id, user_id=request.user.id)
+        get_object_or_404(RoomPrivilege, room_id=room_id, user_id=request.user.id)
         room = get_object_or_404(Room, pk=room_id)
         term = RoomTerm(room_id = room, schedule_completed=False)
         form = TermForm(request.POST, instance=term)

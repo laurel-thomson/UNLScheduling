@@ -1,8 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+import logging
 
-from .models import User, Room, RoomTerm
+from .models import User, Room, RoomTerm, TimeSlot
+
+logger = logging.getLogger(__name__)
 
 class TeacherSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -26,7 +29,6 @@ class StudentSignUpForm(UserCreationForm):
             user.save()
         return user
 
-#Creates or updates a room
 class RoomForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(RoomForm, self).__init__(*args, **kwargs)
@@ -39,7 +41,9 @@ class RoomForm(ModelForm):
 class DateInput(forms.DateInput):
     input_type = 'date'
 
-#Creates or updates a term
+class TimeInput(forms.DateInput):
+    input_type = 'time'
+
 class TermForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(TermForm, self).__init__(*args, **kwargs)
@@ -50,4 +54,16 @@ class TermForm(ModelForm):
         fields = ('name', 'available_until')
         widgets = {
             'available_until': DateInput(),
+        }
+
+class TimeSlotForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(TimeSlotForm, self).__init__(*args, **kwargs)
+        self.fields['day'].required = True
+    class Meta:
+        model = TimeSlot
+        fields = ('day', 'start_time', 'end_time',)
+        widgets = {
+            'start_time': TimeInput(),
+            'end_time': TimeInput(),
         }
