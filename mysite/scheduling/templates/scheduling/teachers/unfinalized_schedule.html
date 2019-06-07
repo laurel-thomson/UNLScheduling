@@ -27,4 +27,6 @@
         <input type="submit" value="Submit">
     </form>
 
+    <p><a href="{% url 'teachers:delete_term' room.id term.id %}" onclick="return confirm('Are you sure?')">Delete this Term</a></p>
+
 {% endblock %}

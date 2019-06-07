@@ -5,14 +5,15 @@
 <h2>Term Schedule</h2>
     <p>The schedule has been finalized.</p>
 
+{% for slot, users in schedule.items %}
+    <p>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</p>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.user_id }}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
 
-    {% for slot, users in schedule.items %}
-        <p>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</p>
-        <ul>
-            {% for user in users %}
-                <li>{{ user.user_id }}</li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+<p><a href="{% url 'teachers:delete_term' room.id term.id %}" onclick="return confirm('Are you sure?')">Delete this Term</a></p>
 
 {% endblock %}

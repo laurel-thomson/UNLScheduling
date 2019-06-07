@@ -65,10 +65,11 @@ def term_detail(request, room_id, term_id):
 
 def finalized_schedule(request, term):
     time_slots = term.timeslot_set.all()
+    room = term.room_id
     schedule = {}
     for slot in time_slots:
-        schedule[slot] = slot.scheduleduseuserr_set.all()
-    return render(request, 'scheduling/teachers/finalized_schedule.html', {'term':term, 'schedule':schedule})
+        schedule[slot] = slot.scheduleduser_set.all()
+    return render(request, 'scheduling/teachers/finalized_schedule.html', {'room':room,'term':term, 'schedule':schedule})
 
 def unfinalized_schedule(request, term):
     if request.method == 'POST':
@@ -78,11 +79,12 @@ def unfinalized_schedule(request, term):
         return HttpResponseRedirect('')
     else:
         time_slots = term.timeslot_set.all()
+        room = term.room_id
         schedule = {}
         for slot in time_slots:
             schedule[slot] = slot.schedulepreference_set.all()
         form = TimeSlotForm()
-        return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'term':term, 'schedule':schedule, 'form': form})
+        return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form})
 
 @login_required
 @teacher_required
@@ -123,9 +125,15 @@ def delete_room(request, room_id):
 
 @login_required
 @teacher_required
+def delete_term(request, room_id, term_id):
+    get_object_or_404(RoomPrivilege, room_id = room_id, user_id = request.user.id)
+    term = get_object_or_404(RoomTerm, pk=term_id)
+    term.delete()
+    return redirect('/scheduling/teachers/{}'.format(room_id))
+
+@login_required
+@teacher_required
 def remove_user(request, room_id, user_id):
-    #send a 404 if the user deleting isn't the owner of the room
-    room = get_object_or_404(Room,pk=room_id, owner=request.user.id)
     privilege = get_object_or_404(RoomPrivilege, room_id=room_id, user_id=user_id)
     privilege.delete()
     return redirect('/scheduling/teachers/{}'.format(room_id))
