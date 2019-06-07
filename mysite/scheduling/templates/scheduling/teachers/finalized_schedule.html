@@ -3,7 +3,7 @@
 {% block content %}
 
 <h2>Term Schedule</h2>
-    <p>The schedule has been finalized.</p>
+    <p>The schedule has been finalized. <a href="{% url 'teachers:unfinalize_schedule' room.id term.id %}">Reopen the schedule</a></p>
 
 {% for slot, users in schedule.items %}
     <p>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</p>

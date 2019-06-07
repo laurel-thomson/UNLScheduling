@@ -137,3 +137,19 @@ def remove_user(request, room_id, user_id):
     privilege = get_object_or_404(RoomPrivilege, room_id=room_id, user_id=user_id)
     privilege.delete()
     return redirect('/scheduling/teachers/{}'.format(room_id))
+
+@login_required
+@teacher_required
+def finalize_schedule(request, room_id, term_id):
+    term = get_object_or_404(RoomTerm, pk=term_id)
+    term.schedule_completed = True
+    term.save()
+    return redirect('/scheduling/teachers/{}/{}'.format(room_id, term_id))
+
+@login_required
+@teacher_required
+def unfinalize_schedule(request, room_id, term_id):
+    term = get_object_or_404(RoomTerm, pk=term_id)
+    term.schedule_completed = False
+    term.save()
+    return redirect('/scheduling/teachers/{}/{}'.format(room_id, term_id))
