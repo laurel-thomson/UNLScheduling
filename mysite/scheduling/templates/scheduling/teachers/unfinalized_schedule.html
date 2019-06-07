@@ -8,14 +8,26 @@
 
     <h3>Time Preferences</h2>
 
-    {% for slot, preferences in schedule.items %}
-        <p>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</p>
-        <ul>
-            {% for pref in preferences %}
-                <li>{{ pref.user_id }}: Preference type = {{ pref.preference_type }}</li>
+    <form action="{% url 'teachers:update_schedule' room.id term.id %}" method="post">
+        {% csrf_token %}
+        {% for slot, data in schedule.items %}
+            <strong><label>{{ slot }}</label></strong><br>
+            {% for type, list in data.items %}
+                {% if type == 'preferences' %}
+                    {% for pref in list %}
+                        <label for="{{pref.id}}">{{pref.user_id}} : Preference type = {{pref.preference_type}}</label>
+                        <input type='checkbox' name="{{pref.id}}" id="{{pref.id}}"><br>
+                    {% endfor %}
+                {% elif type == 'scheduled_users' %}
+                    {% for user in list %}
+                        <label>Scheduled: {{user.user_id}}</label>
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
-        </ul>
-    {% endfor %}
+        {% endfor %}
+
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
 
     <h3>Add time slot</h3>
 

@@ -7,7 +7,7 @@ import logging
 import datetime
 
 from ..forms import TeacherSignUpForm, RoomForm, TermForm, TimeSlotForm
-from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege
+from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege, SchedulePreference, ScheduledUser
 from ..decorators import teacher_required
 
 logger = logging.getLogger(__name__)
@@ -53,6 +53,28 @@ def room_detail(request, room_id):
 
 @login_required
 @teacher_required
+def update_schedule(request, room_id, term_id):
+    logger.error("POST = {}".format(request.POST))
+    term = get_object_or_404(RoomTerm, pk = term_id)
+    room = get_object_or_404(Room, pk = room_id)
+    preferences = SchedulePreference.objects.filter(time_slot_id__room_term_id__room_id = room_id)
+    for pref in preferences:
+        to_be_scheduled = request.POST.get(str(pref.id)) == 'on'
+        if to_be_scheduled:
+            if not ScheduledUser.objects.filter(user_id = pref.user_id, time_slot_id = pref.time_slot_id).exists():
+                user = pref.user_id
+                slot = pref.time_slot_id
+                s_user = ScheduledUser(user_id = user, time_slot_id = slot)
+                s_user.save()
+        else:
+            if ScheduledUser.objects.filter(user_id = pref.user_id, time_slot_id = pref.time_slot_id).exists():
+                s_user = get_object_or_404(ScheduledUser, user_id = pref.user_id, time_slot_id=pref.time_slot_id)
+                s_user.delete()
+    return redirect('/scheduling/teachers/{}/{}/'.format(room_id, term_id))
+
+
+@login_required
+@teacher_required
 def term_detail(request, room_id, term_id):
     #check if the user has privilege for the room - 404 if not
     get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
@@ -74,10 +96,13 @@ def finalized_schedule(request, term):
 def unfinalized_schedule(request, term):
     time_slots = term.timeslot_set.all()
     room = term.room_id
+    form = TimeSlotForm()
+
     schedule = {}
     for slot in time_slots:
-        schedule[slot] = slot.schedulepreference_set.all()
-    form = TimeSlotForm()
+        schedule[slot] = {}
+        schedule[slot]['preferences'] = slot.schedulepreference_set.all()
+        schedule[slot]['scheduled_users'] = slot.scheduleduser_set.all()
     return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form})
 
 @login_required
