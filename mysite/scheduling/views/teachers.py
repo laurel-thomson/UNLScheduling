@@ -72,19 +72,22 @@ def finalized_schedule(request, term):
     return render(request, 'scheduling/teachers/finalized_schedule.html', {'room':room,'term':term, 'schedule':schedule})
 
 def unfinalized_schedule(request, term):
-    if request.method == 'POST':
-        time_slot = TimeSlot(room_term_id = term)
-        form = TimeSlotForm(request.POST, instance=time_slot)
-        form.save()
-        return HttpResponseRedirect('')
-    else:
-        time_slots = term.timeslot_set.all()
-        room = term.room_id
-        schedule = {}
-        for slot in time_slots:
-            schedule[slot] = slot.schedulepreference_set.all()
-        form = TimeSlotForm()
-        return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form})
+    time_slots = term.timeslot_set.all()
+    room = term.room_id
+    schedule = {}
+    for slot in time_slots:
+        schedule[slot] = slot.schedulepreference_set.all()
+    form = TimeSlotForm()
+    return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form})
+
+@login_required
+@teacher_required
+def add_time_slot(request, room_id, term_id):
+    term = get_object_or_404(RoomTerm, pk=term_id)
+    time_slot = TimeSlot(room_term_id = term)
+    form = TimeSlotForm(request.POST, instance=time_slot)
+    form.save()
+    return redirect('/scheduling/teachers/{}/{}/'.format(room_id, term_id))
 
 @login_required
 @teacher_required
