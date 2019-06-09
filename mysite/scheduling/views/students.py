@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
 from django import forms
 import logging
+from django.contrib import messages
 
 from ..forms import StudentSignUpForm
 from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege, SchedulePreference
@@ -73,13 +75,13 @@ def unfinalized_schedule(request, term):
                     pref.preference_type = pref_type
                     pref.save()
                 except:
-                    logger.error("PREFERENCE NOT FOUND.  User name = {}, Slot name = {}".format(request.user.username, slot.start_time))
                     pref = SchedulePreference(user_id = user, time_slot_id = slot, preference_type = pref_type)
                     pref.save()
             else:
                 #delete all preferences matching this user and this time slot
                 SchedulePreference.objects.filter(user_id = request.user.id, time_slot_id = slot.id).delete()
-        return redirect('/scheduling/students/')
+        messages.success(request, 'Changes successfully saved.')
+        return HttpResponseRedirect('')
     else:
         time_slots = term.timeslot_set.all()
         schedule = {}

@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
+from django.contrib import messages
 import logging
 import datetime
 
@@ -108,6 +109,7 @@ def update_schedule(request, room_id, term_id):
                 if ScheduledUser.objects.filter(user_id = user.id, time_slot_id = slot.id).exists():
                     s_user = get_object_or_404(ScheduledUser, user_id = user.id, time_slot_id=slot.id)
                     s_user.delete()
+    messages.success(request, 'Changes successfully saved.')
     return redirect('/scheduling/teachers/{}/{}/'.format(room_id, term_id))
 
 @login_required

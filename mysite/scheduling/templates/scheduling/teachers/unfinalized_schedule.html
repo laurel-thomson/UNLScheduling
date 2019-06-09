@@ -8,6 +8,12 @@
 
     <h3>Time Preferences</h2>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
     <form action="{% url 'teachers:update_schedule' room.id term.id %}" method="post">
         {% csrf_token %}
         {% for slot, users in schedule.items %}

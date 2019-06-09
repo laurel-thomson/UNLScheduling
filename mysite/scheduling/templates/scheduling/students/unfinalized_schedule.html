@@ -8,6 +8,12 @@
 
     <h3>Time Preferences</h2>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
     {% load crispy_forms_tags %}
 
     <form action="" method="post">
