@@ -10,22 +10,16 @@
 
     <form action="{% url 'teachers:update_schedule' room.id term.id %}" method="post">
         {% csrf_token %}
-        {% for slot, data in schedule.items %}
-            <strong><label>{{ slot }}</label></strong><br>
-            {% for type, list in data.items %}
-                {% if type == 'preferences' %}
-                    {% for pref in list %}
-                        <label for="{{pref.id}}">{{pref.user_id}} : Preference type = {{pref.preference_type}}</label>
-                        <input type='checkbox' name="{{pref.id}}" id="{{pref.id}}"><br>
-                    {% endfor %}
-                {% elif type == 'scheduled_users' %}
-                    {% for user in list %}
-                        <label>Scheduled: {{user.user_id}}</label>
-                    {% endfor %}
-                {% endif %}
+        {% for slot, users in schedule.items %}
+            <h4><label>{{ slot }}</label></h4>
+            {% for user, user_schedule in users.items %}
+                <label><strong>{{ user }}</label></strong><br>
+                <label for "{{slot.id}}_{{user.id}}">Preference = {{user_schedule.preference.preference_type}}<br> Is Scheduled = </label>
+                <input type = 'checkbox' name="{{slot.id}}_{{user.id}}" id="{{slot.id}}_{{user.id}}" {% if user_schedule.is_scheduled %}checked{% endif %}><br><br>
             {% endfor %}
+            <br><br>
         {% endfor %}
-
+        <br><br>
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 

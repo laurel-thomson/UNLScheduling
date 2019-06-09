@@ -51,27 +51,6 @@ def room_detail(request, room_id):
         unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True)
         return render(request, 'scheduling/teachers/room_detail.html', {'terms': terms, 'room': room, 'privileged_users': privileged_users, 'unprivileged_users': unprivileged_users})
 
-@login_required
-@teacher_required
-def update_schedule(request, room_id, term_id):
-    logger.error("POST = {}".format(request.POST))
-    term = get_object_or_404(RoomTerm, pk = term_id)
-    room = get_object_or_404(Room, pk = room_id)
-    preferences = SchedulePreference.objects.filter(time_slot_id__room_term_id__room_id = room_id)
-    for pref in preferences:
-        to_be_scheduled = request.POST.get(str(pref.id)) == 'on'
-        if to_be_scheduled:
-            if not ScheduledUser.objects.filter(user_id = pref.user_id, time_slot_id = pref.time_slot_id).exists():
-                user = pref.user_id
-                slot = pref.time_slot_id
-                s_user = ScheduledUser(user_id = user, time_slot_id = slot)
-                s_user.save()
-        else:
-            if ScheduledUser.objects.filter(user_id = pref.user_id, time_slot_id = pref.time_slot_id).exists():
-                s_user = get_object_or_404(ScheduledUser, user_id = pref.user_id, time_slot_id=pref.time_slot_id)
-                s_user.delete()
-    return redirect('/scheduling/teachers/{}/{}/'.format(room_id, term_id))
-
 
 @login_required
 @teacher_required
@@ -99,11 +78,37 @@ def unfinalized_schedule(request, term):
     form = TimeSlotForm()
 
     schedule = {}
+    users = User.objects.filter(roomprivilege__room_id = room.id, is_student = True)
     for slot in time_slots:
         schedule[slot] = {}
-        schedule[slot]['preferences'] = slot.schedulepreference_set.all()
-        schedule[slot]['scheduled_users'] = slot.scheduleduser_set.all()
+        for user in users:
+            schedule[slot][user] = {}
+            try:
+                schedule[slot][user]["preference"] = SchedulePreference.objects.get(user_id = user.id, time_slot_id = slot.id)
+            except:
+                schedule[slot][user]["preference"] = None
+            schedule[slot][user]["is_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id = slot.id).exists()
     return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form})
+
+@login_required
+@teacher_required
+def update_schedule(request, room_id, term_id):
+    term = get_object_or_404(RoomTerm, pk=term_id)
+    time_slots = term.timeslot_set.all()
+    users = User.objects.filter(roomprivilege__room_id = room_id, is_student = True)
+
+    for slot in time_slots:
+        for user in users:
+            to_be_scheduled = request.POST.get("{}_{}".format(slot.id,user.id)) == 'on'
+            if to_be_scheduled:
+                if not ScheduledUser.objects.filter(user_id = user.id, time_slot_id = slot.id).exists():
+                    s_user = ScheduledUser(user_id = user, time_slot_id = slot)
+                    s_user.save()
+            else:
+                if ScheduledUser.objects.filter(user_id = user.id, time_slot_id = slot.id).exists():
+                    s_user = get_object_or_404(ScheduledUser, user_id = user.id, time_slot_id=slot.id)
+                    s_user.delete()
+    return redirect('/scheduling/teachers/{}/{}/'.format(room_id, term_id))
 
 @login_required
 @teacher_required
