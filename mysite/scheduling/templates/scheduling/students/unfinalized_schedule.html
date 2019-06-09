@@ -13,9 +13,11 @@
     <form action="" method="post">
         {% csrf_token %}
         {% for slot, pref in schedule.items %}
-            <label for = "{{slot.id}}">{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</label>
+            <label for = "{{slot.id}}"><h4>{{slot}}</h4></label>
             <input id = "{{slot.id}}" name="{{slot.id}}" type = "number" value="{{pref.preference_type}}">
         {% endfor %}
+
+        <br><br>
 
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
