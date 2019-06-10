@@ -188,3 +188,11 @@ def unfinalize_schedule(request, room_id, term_id):
     term.schedule_completed = False
     term.save()
     return redirect('/scheduling/teachers/{}/{}'.format(room_id, term_id))
+
+@login_required
+@teacher_required
+def delete_time_slot(request, room_id, term_id, slot_id):
+    get_object_or_404(RoomPrivilege, user_id = request.user.id, room_id = room_id)
+    slot = get_object_or_404(TimeSlot, pk=slot_id)
+    slot.delete()
+    return redirect('/scheduling/teachers/{}/{}'.format(room_id, term_id))

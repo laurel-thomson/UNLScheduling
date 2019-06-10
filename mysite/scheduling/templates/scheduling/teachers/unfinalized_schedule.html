@@ -18,6 +18,8 @@
         {% csrf_token %}
         {% for slot, users in schedule.items %}
             <h4><label>{{ slot }}</label></h4>
+            <p><a href="{% url 'teachers:delete_time_slot' room.id term.id slot.id %}" onclick="return confirm('Are you sure?')">Delete this time slot</a></p>
+
             {% for user, user_schedule in users.items %}
                 <label><strong>{{ user }}</label></strong><br>
                 <label for "{{slot.id}}_{{user.id}}">Preference = {{user_schedule.preference.preference_type}}<br> Is Scheduled = </label>
