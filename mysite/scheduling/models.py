@@ -60,13 +60,19 @@ class ScheduledUser(models.Model):
     def __str__(self):
         return "{}: {}".format(self.user_id, self.time_slot_id)
 
+class PreferenceOption(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class SchedulePreference(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     time_slot_id = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)
-    preference_type = models.IntegerField()
+    preference_id = models.ForeignKey(PreferenceOption, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{}: {}".format(self.user_id, self.time_slot_id)
+        return "{}: {} - {}".format(self.user_id, self.time_slot_id, self.preference_id)
 
 class RoomPrivilege(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

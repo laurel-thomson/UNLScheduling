@@ -8,7 +8,7 @@ import logging
 from django.contrib import messages
 
 from ..forms import StudentSignUpForm
-from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege, SchedulePreference
+from ..models import *
 from ..decorators import student_required
 
 logger = logging.getLogger(__name__)
@@ -68,19 +68,8 @@ def unfinalized_schedule(request, room, term):
     if request.method == 'POST':
         slots = term.timeslot_set.all()
         for slot in slots:
-            pref_type = request.POST.get(str(slot.id))
-            user = User.objects.get(pk=request.user.id)
-            if pref_type:
-                try:
-                    pref = SchedulePreference.objects.get(user_id = request.user.id, time_slot_id = slot.id)
-                    pref.preference_type = pref_type
-                    pref.save()
-                except:
-                    pref = SchedulePreference(user_id = user, time_slot_id = slot, preference_type = pref_type)
-                    pref.save()
-            else:
-                #delete all preferences matching this user and this time slot
-                SchedulePreference.objects.filter(user_id = request.user.id, time_slot_id = slot.id).delete()
+            pref_option = get_object_or_404(PreferenceOption, name = request.POST.get(str(slot.id)))
+            SchedulePreference.objects.update_or_create(time_slot_id = slot, user_id = request.user, defaults = {'preference_id': pref_option})
         messages.success(request, 'Changes successfully saved.')
         return HttpResponseRedirect('')
     else:
@@ -92,5 +81,6 @@ def unfinalized_schedule(request, room, term):
                 schedule[slot] = prefs[0]
             else:
                 schedule[slot] = None
+        options = PreferenceOption.objects.all()
 
-        return render(request, 'scheduling/students/unfinalized_schedule.html', {'room': room, 'schedule': schedule})
+        return render(request, 'scheduling/students/unfinalized_schedule.html', {'room': room, 'schedule': schedule, 'options': options})
