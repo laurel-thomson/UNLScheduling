@@ -4,8 +4,13 @@ h1, h2 {
     font-weight: 600;
 }
 
-.jumbotron text-center {
-    background-color: #d00000;
+.jumbotron {
+    background-color: transparent;
+}
+
+.jumbotron h1 {
+    padding-top: 20px;
+    color: #404040;
 }
 
 .navbar-default {
@@ -15,11 +20,34 @@ h1, h2 {
    }
 
 .nav.navbar-nav li a {
-    color: #f5f1e7;
+    color: #fcf5e5;
+    font-weight:700;
+    font-size:1.1em;
+}
+
+.navbar-nav li a:hover, .navbar-nav > .active > a {
+    background-color:#fcf5e5 !important;
+    background-image: none !important;
+  }
+
+.navbar-text {
+    color: #fcf5e5 !important;
+}
+
+.nav.navbar-nav li a:hover {
+    color: #000000;
 }
 
 .navbar-default .navbar-brand {
     color: #f5f1e7;
+}
+
+.navbar-default .navbar-brand:visited {
+    color: #f5f1e7;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: #000000;
 }
 
 body {
@@ -28,49 +56,26 @@ body {
     font-family: 'Montserrat';
 }
 
-.page-header {
-    background-color: #d00000;
-    margin-top: 0;
-    padding: 20px 20px 20px 40px;
-}
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+    background: none;
+    float: left; 
+  }
+  .navbar-default .navbar-toggle .icon-bar {
+    background-color: #f5f1e7;
+  }
+  .navbar-default .navbar-toggle:hover .icon-bar {
+    background-color: #000;
+  }
 
-.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
-    color: #f5f1e7;
-    font-size: 36pt;
-    text-decoration: none;
-}
+  .navbar-default .navbar-toggle:focus .icon-bar {
+    background-color: #000;
+  }
+  
+  .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+  }
 
-.content {
-    margin-left: 40px;
-}
-
-h1, h2, h3, h4 {
-    font-family: 'Montserrat';
-}
-
-.date {
-    color: #d00000;
-}
-
-.save {
-    float: right;
-}
-
-.post-form textarea, .post-form input {
-    width: 100%;
-}
-
-.top-menu, .top-menu:hover, .top-menu:visited {
-    color: #f5f1e7;
-    float: right;
-    font-size: 26pt;
-    margin-right: 20px;
-}
-
-.post {
-    margin-bottom: 70px;
-}
-
-.post h2 a, .post h2 a:visited {
-    color: #000000;
-}
+  .navbar-default .navbar-toggle:focus {
+    background-color: transparent;
+  }

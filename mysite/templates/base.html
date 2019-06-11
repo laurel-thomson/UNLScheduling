@@ -21,18 +21,20 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Currently in Room: RoomName</a>
+                    {% block current_room %}{% endblock %}
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#">Page 1</a></li>
-                        <li><a href="#">Page 2</a></li>
-                        <li><a href="#">Page 3</a></li>
+                        {% block navigation %}{% endblock %}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        {% if user.is_authenticated %}
+                            <p class="navbar-text">Logged in as: {{ user.username }}</p> 
+                            <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+                        {% else %}
+                            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                            <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -40,19 +42,8 @@
    
 
         <div class="jumbotron">
-            <h1>UNL Scheduling Website</h1>
+            <h1>UNL Mathematics Scheduling</h1>
         </div>
-
-        {% if user.is_authenticated %}
-            <p>Logged in as: {{ user.username }}</p>
-            {% if user.is_teacher %}
-            <p>Account type = teacher</p>
-            {% else %}
-            <p>Account type = student</p>
-            {% endif %}
-
-            <p><a href="{% url 'logout' %}">Log out</a></p>
-        {% endif %}
 
         {% block content %}
         {% endblock %}
