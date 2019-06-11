@@ -2,17 +2,13 @@
 
 {% block room_name %}{{room.name}}{% endblock %}
 
-{% block content %}
-<h2>Available Terms</h2>
+{% block term_link %}<li><a href="{% url 'teachers:term_list' room.id %}">Terms</a></li>{% endblock %}
+{% block user_link %}<li class="active"><a href="{% url 'teachers:user_list' room.id %}">Users</a></li>{% endblock %}
+    
 
-{% for term in terms %}
-    <p><a href="{{ term.id }}/">{{ term.name }}</a></p>
-{% endfor %}
+{% block content %}
 
 <h2>Users in Room</h2>
-<p>Owner: {{ room.owner }}
-
-<h3>All Users in Room</h3>
 {% for p_user in privileged_users %}
     <p>{{ p_user.username }} 
     {% if p_user.id == room.owner.id %}
@@ -21,7 +17,7 @@
     {% endif %}
 {% endfor %}
 
-<h3>Add more users to the room</h3>
+<h2>Add more users to the room</h2>
 <form action="" method="POST">
     {% csrf_token %}
     <select name="users">
@@ -31,13 +27,5 @@
     </select>
     <input type="submit" value="Submit">
 </form>
-
-<br>
-<p><a href="{% url 'teachers:create_term' room.id %}">Create New Term</a></p>
-<br>
-
-{% if room.owner.id == user.id %}
-    <p><a href="{% url 'teachers:delete_room' room.id %}" onclick="return confirm('Are you sure?')">Delete this Room</a></p>
-{% endif %}
 
 {% endblock %}

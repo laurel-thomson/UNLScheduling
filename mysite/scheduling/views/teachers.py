@@ -35,8 +35,26 @@ def room_list(request):
 
 @login_required
 @teacher_required
-def room_detail(request, room_id):
-    #check if the user has privilege for the room - 404 if not
+def term_list(request, room_id):
+    get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
+    room = get_object_or_404(Room, pk=room_id)
+    terms = RoomTerm.objects.filter(room_id=room_id)
+    form = TermForm()
+    return render(request, 'scheduling/teachers/term_list.html', {'terms': terms, 'room': room, 'form': form})
+
+@login_required
+@teacher_required
+def create_term(request, room_id):
+    get_object_or_404(RoomPrivilege, room_id=room_id, user_id=request.user.id)
+    room = get_object_or_404(Room, pk=room_id)
+    term = RoomTerm(room_id = room, schedule_completed=False)
+    form = TermForm(request.POST, instance=term)
+    form.save()
+    return redirect('/scheduling/teachers/{}/'.format(room_id))
+
+@login_required
+@teacher_required
+def user_list(request, room_id):
     get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     room = get_object_or_404(Room, pk=room_id)
 
@@ -47,16 +65,13 @@ def room_detail(request, room_id):
         privilege.save()
         return HttpResponseRedirect('')
     else:
-        terms = RoomTerm.objects.filter(room_id=room_id)
         privileged_users = User.objects.filter(roomprivilege__room_id = room_id)
         unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True)
-        return render(request, 'scheduling/teachers/room_detail.html', {'terms': terms, 'room': room, 'privileged_users': privileged_users, 'unprivileged_users': unprivileged_users})
-
+        return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'privileged_users': privileged_users})
 
 @login_required
 @teacher_required
 def term_detail(request, room_id, term_id):
-    #check if the user has privilege for the room - 404 if not
     get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     term = get_object_or_404(RoomTerm, pk=term_id)
 
@@ -138,21 +153,6 @@ def create_room(request):
 
 @login_required
 @teacher_required
-def create_term(request, room_id):
-    if request.method == 'POST':
-        get_object_or_404(RoomPrivilege, room_id=room_id, user_id=request.user.id)
-        room = get_object_or_404(Room, pk=room_id)
-        term = RoomTerm(room_id = room, schedule_completed=False)
-        form = TermForm(request.POST, instance=term)
-        form.save()
-        return redirect('/scheduling/teachers/{}/'.format(room_id))
-    else:
-        form = TermForm()
-        room = get_object_or_404(Room, pk=room_id)
-        return render(request, 'scheduling/teachers/create_update_term.html', {'form': form, 'room': room})
-
-@login_required
-@teacher_required
 def delete_room(request, room_id):
     #send a 404 if the user deleting isn't the owner of the room
     room = get_object_or_404(Room,pk=room_id, owner=request.user.id)
@@ -172,7 +172,7 @@ def delete_term(request, room_id, term_id):
 def remove_user(request, room_id, user_id):
     privilege = get_object_or_404(RoomPrivilege, room_id=room_id, user_id=user_id)
     privilege.delete()
-    return redirect('/scheduling/teachers/{}'.format(room_id))
+    return redirect('/scheduling/teachers/{}/users'.format(room_id))
 
 @login_required
 @teacher_required

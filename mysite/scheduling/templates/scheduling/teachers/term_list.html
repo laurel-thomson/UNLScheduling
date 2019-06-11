@@ -1,0 +1,29 @@
+{% extends 'in_room_base_teacher.html' %}
+
+{% block room_name %}{{room.name}}{% endblock %}
+
+{% block term_link %}<li class="active"><a href="{% url 'teachers:term_list' room.id %}">Terms</a></li>{% endblock %}
+{% block user_link %}<li><a href="{% url 'teachers:user_list' room.id %}">Users</a></li>{% endblock %}
+    
+
+{% block content %}
+<h2>Available Terms</h2>
+
+{% for term in terms %}
+    <p><a href="{{ term.id }}/">{{ term.name }}</a></p>
+{% endfor %}
+
+<h2>Create New Term</h2>
+<form action="{% url 'teachers:create_term' room.id %}" method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Submit">
+</form>
+
+{% if room.owner.id == user.id %}
+    <p><a href="{% url 'teachers:delete_room' room.id %}" onclick="return confirm('Are you sure?')">Delete this Room</a></p>
+{% endif %}
+
+{% endblock %}

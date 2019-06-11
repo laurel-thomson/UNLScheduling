@@ -2,6 +2,9 @@
 
 {% block room_name %}{{room.name}}{% endblock %}
 
+{% block term_link %}<li class="active"><a href="{% url 'teachers:term_list' room.id %}">Terms</a></li>{% endblock %}
+{% block user_link %}<li><a href="{% url 'teachers:user_list' room.id %}">Users</a></li>{% endblock %}
+
 {% block content %}
 
 <h2>Term Schedule</h2>

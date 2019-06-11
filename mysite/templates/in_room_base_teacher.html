@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block navigation %}
-    <li class="active"><a href="#">Terms</a></li>
-    <li><a href="#">Users</a></li>
-    <li><a href="#">Settings</a></li>
+    {% block term_link %}{% endblock %}
+    {% block user_link %}{% endblock %}
 {% endblock %}
 
 {% block content %}
