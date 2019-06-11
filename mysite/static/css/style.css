@@ -8,9 +8,24 @@ h1, h2 {
     background-color: #d00000;
 }
 
+.navbar-default {
+    background-color:#d00000;
+    background-image: none;
+    background-repeat: no-repeat;
+   }
+
+.nav.navbar-nav li a {
+    color: #f5f1e7;
+}
+
+.navbar-default .navbar-brand {
+    color: #f5f1e7;
+}
+
 body {
     padding-left: 15px;
     background-color:#f5f1e7;
+    font-family: 'Montserrat';
 }
 
 .page-header {
