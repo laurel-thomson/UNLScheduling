@@ -148,7 +148,8 @@ def create_term(request, room_id):
         return redirect('/scheduling/teachers/{}/'.format(room_id))
     else:
         form = TermForm()
-        return render(request, 'scheduling/teachers/create_update_term.html', {'form': form})
+        room = get_object_or_404(Room, pk=room_id)
+        return render(request, 'scheduling/teachers/create_update_term.html', {'form': form, 'room': room})
 
 @login_required
 @teacher_required
