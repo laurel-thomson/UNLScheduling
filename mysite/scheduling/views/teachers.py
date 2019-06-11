@@ -8,7 +8,7 @@ import logging
 import datetime
 
 from ..forms import TeacherSignUpForm, RoomForm, TermForm, TimeSlotForm
-from ..models import Room, RoomTerm, TimeSlot, User, RoomPrivilege, SchedulePreference, ScheduledUser
+from ..models import *
 from ..decorators import teacher_required
 
 logger = logging.getLogger(__name__)
@@ -98,13 +98,17 @@ def unfinalized_schedule(request, term):
     for slot in time_slots:
         schedule[slot] = {}
         for user in users:
-            schedule[slot][user] = {}
             try:
-                schedule[slot][user]["preference"] = SchedulePreference.objects.get(user_id = user.id, time_slot_id = slot.id)
+                pref = SchedulePreference.objects.get(user_id = user.id, time_slot_id = slot.id)
+                option = pref.preference_id
+                if (option.color_coding):
+                    schedule[slot][user] = {}
+                    schedule[slot][user]["preference"] = option
+                    schedule[slot][user]["is_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id = slot.id).exists()
             except:
-                schedule[slot][user]["preference"] = None
-            schedule[slot][user]["is_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id = slot.id).exists()
-    return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form})
+                pass
+    options = PreferenceOption.objects.filter(color_coding__isnull=False)
+    return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form, 'options': options})
 
 @login_required
 @teacher_required

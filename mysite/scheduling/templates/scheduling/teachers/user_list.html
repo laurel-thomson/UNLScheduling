@@ -18,14 +18,22 @@
 {% endfor %}
 
 <h2>Add more users to the room</h2>
+
+{% load crispy_forms_tags %}  
 <form action="" method="POST">
     {% csrf_token %}
-    <select name="users">
-        {% for user in unprivileged_users %}
-            <option value="{{user.id}}">{{user.username}}</option>
-        {% endfor %}
-    </select>
-    <input type="submit" value="Submit">
+    <div class="form-row">
+        <div class="form-group col-md-1 mb-0">
+            <select name="users">
+                {% for user in unprivileged_users %}
+                    <option value="{{user.id}}">{{user.username}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-1 mb-0">
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </div>
+    </div>
 </form>
 
 {% endblock %}
