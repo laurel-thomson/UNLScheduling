@@ -3,10 +3,16 @@
 <html lang="en">
     <head>
         <title>UNL Scheduling Website</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">    
     </head>
     <body>
 
-        <h1>UNL Scheduling Website</h1>
+        <div class="jumbotron">
+            <h1>UNL Scheduling Website</h1>
+        </div>
 
         {% if user.is_authenticated %}
             <p>Logged in as: {{ user.username }}</p>
