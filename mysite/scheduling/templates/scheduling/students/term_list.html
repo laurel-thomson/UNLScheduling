@@ -2,6 +2,8 @@
 
 {% block room_name %}{{room.name}}{% endblock %}
 
+{% block term_link %}<li class="active"><a href="{% url 'students:term_list' room.id %}">Terms</a></li>{% endblock %}
+
 {% block content %}
 
 <h2>Available Terms</h2>

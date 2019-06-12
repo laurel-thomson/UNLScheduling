@@ -36,12 +36,12 @@ def room_list(request):
 
 @login_required
 @student_required
-def room_detail(request, room_id):
+def term_list(request, room_id):
     #check if the user has privilege for the room - 404 if not
     privilege = get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     terms = RoomTerm.objects.filter(room_id=room_id)
     room = get_object_or_404(Room, pk=room_id)
-    return render(request, 'scheduling/students/room_detail.html', {'terms': terms, 'room': room })
+    return render(request, 'scheduling/students/term_list.html', {'terms': terms, 'room': room })
     
 @login_required
 @student_required

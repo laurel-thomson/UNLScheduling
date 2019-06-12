@@ -10,15 +10,28 @@
 <h2>Term Schedule</h2>
     <p>The schedule has been finalized. <a href="{% url 'teachers:unfinalize_schedule' room.id term.id %}">Reopen the schedule</a></p>
 
-{% for slot, users in schedule.items %}
-    <p>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</p>
-    <ul>
-        {% for user in users %}
-            <li>{{ user.user_id }}</li>
+    <table id = "myTable" class="display nowrap">
+        <thead style="display:none;">
+            <tr>
+                <td>Time Slot</td>
+                <td>Student</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for slot, users in schedule.items %}
+            {% for user in users %}
+                <tr>
+                    <td>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</td>
+                    <td>{{ user.user_id }}</td>
+                </tr>
+            {% endfor %}
         {% endfor %}
-    </ul>
-{% endfor %}
+        </tbody>
+    </table>
 
 <p><a href="{% url 'teachers:delete_term' room.id term.id %}" onclick="return confirm('Are you sure?')">Delete this Term</a></p>
+
+{% load static %}
+<script type="text/javascript" src="{% static 'js/table_grouping.js' %}"></script>
 
 {% endblock %}

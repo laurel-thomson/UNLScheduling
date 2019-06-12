@@ -7,7 +7,7 @@ urlpatterns = [
 
     path('students/', include(([
         path('', students.room_list, name='room_list'),
-        path('<int:room_id>/', students.room_detail, name='room_detail'),
+        path('<int:room_id>/', students.term_list, name='term_list'),
         path('<int:room_id>/<int:term_id>/', students.term_detail, name='term_detail'),
     ], 'scheduling'), namespace='students')),
 
