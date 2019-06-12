@@ -9,13 +9,37 @@
 {% block content %}
 
 <h2>Users in Room</h2>
-{% for p_user in privileged_users %}
-    <p>{{ p_user.username }} 
-    {% if p_user.id == room.owner.id %}
-    {% elif user.id == room.owner.id or p_user.is_student %}
-        <a href="{% url 'teachers:remove_user' room.id p_user.id %}">Remove from room</a></p>
-    {% endif %}
-{% endfor %}
+
+<table id = "myTable" class="display nowrap">
+    <thead>
+        <tr>
+            <td>Term</td>
+            <td>Student</td>
+            <td>Submitted Preference?</td>
+            <td>Was Scheduled?</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% for term, users in user_data.items %}
+        {% for user, user_info in users.items %}
+            <tr>
+                <td>{{term}}</td>
+                <td>{{user}} <a href="{% url 'teachers:remove_user' room.id user.id %}" onclick="return confirm('Are you sure you want to remove this student from the room?')">x</a> </td>
+                <td>
+                    <font {% if user_info.submitted_preferences %} color="green" {% else %} color="red" {% endif %}>
+                        <strong>{{user_info.submitted_preferences}}</strong>
+                    </font>
+                </td>
+                <td>
+                    <font {% if user_info.was_scheduled %} color="green" {% else %} color="red" {% endif %}>
+                        <strong>{{user_info.was_scheduled}}</strong>
+                    </font>
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
 
 <h2>Add more users to the room</h2>
 
@@ -35,5 +59,9 @@
         </div>
     </div>
 </form>
+
+{% load static %}
+<script type="text/javascript" src="{% static 'js/table_grouping.js' %}"></script>
+
 
 {% endblock %}

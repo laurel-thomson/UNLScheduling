@@ -46,6 +46,7 @@
             {% endfor %}
             </tbody>
         </table>
+        <br>
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 
@@ -56,7 +57,7 @@
         <p><strong><font color="{{option.color_coding}}">{{option}}</font></strong></p>
     {% endfor %}
 
-    <h3>Add time slot</h3>
+    <h3>Add Time Slot</h3>
 
     <form action="{% url 'teachers:add_time_slot' room.id term.id %}" method="post">
         {% csrf_token %}

@@ -65,9 +65,19 @@ def user_list(request, room_id):
         privilege.save()
         return HttpResponseRedirect('')
     else:
-        privileged_users = User.objects.filter(roomprivilege__room_id = room_id)
+        students = User.objects.filter(roomprivilege__room_id = room_id, is_student = True)
         unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True)
-        return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'privileged_users': privileged_users})
+        terms = room.roomterm_set.all()
+
+        user_data = {}
+        for term in terms:
+            user_data[term] = {}
+            for user in students:
+                user_data[term][user] = {}
+                user_data[term][user]["submitted_preferences"] = SchedulePreference.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
+                user_data[term][user]["was_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
+        logger.error(user_data)
+        return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'user_data': user_data})
 
 @login_required
 @teacher_required
