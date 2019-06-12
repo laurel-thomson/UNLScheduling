@@ -7,14 +7,58 @@
 <h2>Term Schedule</h2>
     <p>The schedule has been finalized.</p>
 
+    <table id = "myTable" class="display nowrap">
+        <thead style="display:none;">
+            <tr>
+                <td>Time Slot</td>
+                <td>Student</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for slot, users in schedule.items %}
+            <tr>
+                <td>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</td>
+                    {% for user in users %}
+                        <td>{{ user.user_id }}</td>
+                    {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    {% for slot, users in schedule.items %}
-        <p>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</p>
-        <ul>
-            {% for user in users %}
-                <li>{{ user.user_id }}</li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+
+
+    <script>
+    $(document).ready( function () {
+    var groupColumn = 0;
+    var table = $('#myTable').DataTable({
+        "columnDefs": [
+            { "visible": false, "targets": groupColumn }
+        ],
+        "order": [[ groupColumn, 'asc' ]],
+        "displayLength": 25,
+        "autoWidth": false,
+        "paging": false,
+        "ordering": false,
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="5">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
+    } );
+ 
+
+} );
+</script>
 
 {% endblock %}

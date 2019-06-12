@@ -1,3 +1,15 @@
+body {
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color:#f5f1e7;
+  font-family: 'Montserrat';
+}
+
+tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+}
+
 h1, h2 {
     color: #d00000;
     font-family: 'Montserrat';
@@ -48,12 +60,6 @@ h1, h2 {
 
 .navbar-default .navbar-brand:hover {
     color: #000000;
-}
-
-body {
-    padding-left: 15px;
-    background-color:#f5f1e7;
-    font-family: 'Montserrat';
 }
 
 .navbar-default .navbar-toggle {
