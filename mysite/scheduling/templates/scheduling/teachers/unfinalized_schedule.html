@@ -44,8 +44,8 @@
                             <a href="{% url 'teachers:delete_time_slot' room.id term.id slot.id %}" onclick="return confirm('Are you sure you want to delete this time slot?')"> x</a>
                         </td>
                         <td>
-                            <label for "{{slot.id}}_{{user.id}}"><font color="{{user_schedule.preference.color_coding}}">{{user}}</font></label>
-                            <input type = 'checkbox' name="{{slot.id}}_{{user.id}}" id="{{slot.id}}_{{user.id}}" {% if user_schedule.is_scheduled %}checked{% endif %}>
+                            <label for "{{slot.id}}_{{user.id}}"><font class="{{user.id}} test" color="{{user_schedule.preference.color_coding}}">{{user}}</font></label>
+                            <input type="checkbox" onclick="checkSchedule({{user.id}})" class="{{user.id}}" name="{{slot.id}}_{{user.id}}" id="{{slot.id}}_{{user.id}}" {% if user_schedule.is_scheduled %}checked{% endif %}>
                         </td>
                     </tr>
                 {% endfor %}
@@ -56,7 +56,7 @@
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 
-    <h2>Add Time Slot</h2>
+    <h2 class="test">Add Time Slot</h2>
 
     <form action="{% url 'teachers:add_time_slot' room.id term.id %}" method="post">
         {% csrf_token %}
@@ -71,5 +71,15 @@
 
     {% load static %}
     <script type="text/javascript" src="{% static 'js/table_grouping.js' %}"></script>
+
+    <script type="text/javascript">
+        function checkSchedule(user_id) {
+            var fonts = document.getElementsByClassName(user_id + " test");
+            for (let font of fonts) {
+                font.setAttribute("color","gray");
+                font.setAttribute("style", "text-decoration: line-through");
+            }
+        }
+    </script>
 
 {% endblock %}
