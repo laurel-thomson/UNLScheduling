@@ -79,7 +79,6 @@ def user_list(request, room_id):
                 user_data[term][user]["student_type"] = get_object_or_404(Student, pk = user.id).student_type
                 if ScheduleRequirement.objects.filter(room_id = room.id, student_type = user_data[term][user]["student_type"].id).exists():
                     user_data[term][user]["minimum_slots"] = get_object_or_404(ScheduleRequirement, room_id = room.id, student_type = user_data[term][user]["student_type"].id)
-        logger.error(user_data)
         return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'user_data': user_data})
 
 @login_required
@@ -121,7 +120,17 @@ def unfinalized_schedule(request, term):
             except:
                 pass
     options = PreferenceOption.objects.filter(color_coding__isnull=False)
-    return render(request, 'scheduling/teachers/unfinalized_schedule.html', {'room':room,'term':term, 'schedule':schedule, 'form': form, 'options': options})
+    requirements = {}
+    amount_scheduled = {}
+    for user in users:
+        amount_scheduled[user.id] = len(ScheduledUser.objects.filter(time_slot_id__room_term_id = term.id, user_id = user.id))
+        try:
+            student = Student.objects.get(user_id = user.id)
+            requirements[user.id] = ScheduleRequirement.objects.get(room_id = room.id, student_type = student.student_type).minimum_slots
+        except:
+            requirements[user.id] = -1
+    return render(request, 'scheduling/teachers/unfinalized_schedule.html', 
+        {'room':room, 'term':term, 'schedule':schedule, 'form': form, 'options': options, 'requirements': requirements, 'amount_scheduled': amount_scheduled})
 
 @login_required
 @teacher_required

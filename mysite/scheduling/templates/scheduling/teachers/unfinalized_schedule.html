@@ -73,11 +73,25 @@
     <script type="text/javascript" src="{% static 'js/table_grouping.js' %}"></script>
 
     <script type="text/javascript">
+        console.log("test1")
+        var amount_scheduled = {
+            {% for k, v in amount_scheduled.items %}
+                "{{ k }}": "{{ v }}",
+            {% endfor %}
+        }
+        var required_amounts = {
+            {% for k, v in requirements.items %}
+                "{{ k }}": "{{ v }}",
+            {% endfor %}
+        }
+
         function checkSchedule(user_id) {
             var fonts = document.getElementsByClassName(user_id + " test");
             for (let font of fonts) {
-                font.setAttribute("color","gray");
-                font.setAttribute("style", "text-decoration: line-through");
+                if (amount_scheduled[user_id] == required_amounts[user_id]) {
+                    font.setAttribute("color","gray");
+                    font.setAttribute("style", "text-decoration: line-through");
+                }
             }
         }
     </script>
