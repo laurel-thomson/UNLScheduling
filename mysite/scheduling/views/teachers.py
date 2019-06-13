@@ -121,16 +121,14 @@ def unfinalized_schedule(request, term):
                 pass
     options = PreferenceOption.objects.filter(color_coding__isnull=False)
     requirements = {}
-    amount_scheduled = {}
     for user in users:
-        amount_scheduled[user.id] = len(ScheduledUser.objects.filter(time_slot_id__room_term_id = term.id, user_id = user.id))
         try:
             student = Student.objects.get(user_id = user.id)
             requirements[user.id] = ScheduleRequirement.objects.get(room_id = room.id, student_type = student.student_type).minimum_slots
         except:
             requirements[user.id] = -1
     return render(request, 'scheduling/teachers/unfinalized_schedule.html', 
-        {'room':room, 'term':term, 'schedule':schedule, 'form': form, 'options': options, 'requirements': requirements, 'amount_scheduled': amount_scheduled})
+        {'room':room, 'term':term, 'schedule':schedule, 'form': form, 'options': options, 'requirements': requirements,})
 
 @login_required
 @teacher_required

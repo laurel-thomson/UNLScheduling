@@ -86,16 +86,31 @@
     </script>
 
     <script type="text/javascript">
-        var amount_scheduled = {
-            {% for k, v in amount_scheduled.items %}
-                "{{ k }}": parseInt("{{ v }}"),
-            {% endfor %}
-        }
+        var amount_scheduled = {};
+        
         var required_amounts = {
             {% for k, v in requirements.items %}
                 "{{ k }}": parseInt("{{ v }}"),
             {% endfor %}
         }
+
+        $(document).ready( function () {
+            //check if any of the checkboxes need to be disabled
+            for (let user_id in required_amounts) {
+                var inputs = document.getElementsByClassName(user_id + " input");
+                count = 0;
+                for (let input of inputs) {
+                    if (input.checked) {
+                        count += 1;
+                    }
+                }
+                amount_scheduled[user_id] = count;
+                console.log("count = " + count);
+                if (amount_scheduled[user_id] == required_amounts[user_id]) {
+                    closeCheckboxes(user_id);
+                }
+            }
+        });
 
         function checkSchedule(checkbox, user_id) {
             if (required_amounts[user_id] == -1) return;
