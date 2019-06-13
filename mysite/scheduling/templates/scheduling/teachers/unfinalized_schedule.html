@@ -44,11 +44,23 @@
                             <a href="{% url 'teachers:delete_time_slot' room.id term.id slot.id %}" onclick="return confirm('Are you sure you want to delete this time slot?')"> x</a>
                         </td>
                         <td>
-                            <label for "{{slot.id}}_{{user.id}}"><font class="{{user.id}} test" color="{{user_schedule.preference.color_coding}}">{{user}}</font></label>
-                            <input type="checkbox" onclick="checkSchedule({{user.id}})" class="{{user.id}}" name="{{slot.id}}_{{user.id}}" id="{{slot.id}}_{{user.id}}" {% if user_schedule.is_scheduled %}checked{% endif %}>
+                            <label for "{{slot.id}}_{{user.id}}"><font class="{{user.id}} font" color="{{user_schedule.preference.color_coding}}">{{user}}</font></label>
+                            <input type="checkbox" onclick="checkSchedule(this, {{user.id}})" class="{{user.id}}" name="{{slot.id}}_{{user.id}}" id="{{slot.id}}_{{user.id}}" {% if user_schedule.is_scheduled %}checked{% endif %}>
                         </td>
                     </tr>
                 {% endfor %}
+
+                <!---This is a bit of a hack to force time slots without users to display in the datatable.  The datatable discovers groups from the rows in the table,
+                so, we add a row without any content if the time slots doesn't have any users.-->
+                {% if not users.items%}
+                    <tr>
+                        <td>
+                            {{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}
+                            <a href="{% url 'teachers:delete_time_slot' room.id term.id slot.id %}" onclick="return confirm('Are you sure you want to delete this time slot?')"> x</a>
+                        </td>
+                    <td height=""></td>
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
@@ -70,10 +82,10 @@
     <p><a href="{% url 'teachers:delete_term' room.id term.id %}" onclick="return confirm('Are you sure?')">Delete this Term</a></p>
 
     {% load static %}
-    <script type="text/javascript" src="{% static 'js/table_grouping.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/table_grouping.js' %}">
+    </script>
 
     <script type="text/javascript">
-        console.log("test1")
         var amount_scheduled = {
             {% for k, v in amount_scheduled.items %}
                 "{{ k }}": "{{ v }}",
@@ -85,13 +97,32 @@
             {% endfor %}
         }
 
-        function checkSchedule(user_id) {
-            var fonts = document.getElementsByClassName(user_id + " test");
-            for (let font of fonts) {
-                if (amount_scheduled[user_id] == required_amounts[user_id]) {
-                    font.setAttribute("color","gray");
-                    font.setAttribute("style", "text-decoration: line-through");
+        function checkSchedule(checkbox, user_id) {
+            if (checkbox.checked) {
+                amount_scheduled[user_id] -= 1
+                if (amount_scheduled[user_id] < required_amounts[user_id]) {
+                    reopenCheckboxes(user_id);
                 }
+            }
+            else {
+                amount_scheduled[user_id] += 1
+                if (amount_scheduled[user_id] == required_amounts[user_id]) {
+                    closeCheckboxes(user_id);
+                }
+            }
+        }
+
+        function reopenCheckboxes(user_id) {
+            var fonts = document.getElementsByClassName(user_id + " font");
+            for (let font of fonts) {
+                font.setAttribute("style", "text-decoration: none");
+            }
+        }
+
+        function closeCheckboxes(user_id) {
+            var fonts = document.getElementsByClassName(user_id + " font");
+            for (let font of fonts) {
+                font.setAttribute("style", "text-decoration: line-through");
             }
         }
     </script>
