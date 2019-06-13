@@ -40,9 +40,12 @@ class RoomTerm(models.Model):
 
 #The scheduling requirements for a specific term for a type of student (for example: undergraduate students in Spring 2019 need to sign up for 6 time slots)
 class ScheduleRequirement(models.Model):
-    term_id = models.ForeignKey(RoomTerm, on_delete=models.CASCADE)
+    room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
     student_type = models.ForeignKey(StudentType, on_delete=models.CASCADE)
     minimum_slots = models.IntegerField()
+
+    def __str__(self):
+        return str(self.minimum_slots)
 
 class TimeSlot(models.Model):
     day = models.CharField('Day', max_length=50)

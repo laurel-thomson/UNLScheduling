@@ -10,7 +10,13 @@
 
 <h2>Term Schedule</h2>
   
-    <p>The schedule has not been finalized. <a href="{% url 'teachers:finalize_schedule' room.id term.id %}">Finalize the schedule</a></p>
+    <p>The schedule has not been finalized. <a href="{% url 'teachers:finalize_schedule' room.id term.id %}">&nbsp;Finalize the schedule</a></p>
+
+    <p>
+        {% for option in options %}
+            <strong><font color="{{option.color_coding}}">{{option}} &nbsp;&nbsp;&nbsp;</font></strong>
+        {% endfor %}
+    </p>
 
     {% if messages %}
         {% for message in messages %}
@@ -50,21 +56,14 @@
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 
-
-    <h3>Color Codes</h3>
-
-    {% for option in options %}
-        <p><strong><font color="{{option.color_coding}}">{{option}}</font></strong></p>
-    {% endfor %}
-
-    <h3>Add Time Slot</h3>
+    <h2>Add Time Slot</h2>
 
     <form action="{% url 'teachers:add_time_slot' room.id term.id %}" method="post">
         {% csrf_token %}
         <table>
             {{ form|crispy }}
         </table>
-        <input type="submit" value="Add Time Slot">
+        <input type="submit" value="Add Time Slot"  class="btn btn-primary">
     </form>
 
     <br>
