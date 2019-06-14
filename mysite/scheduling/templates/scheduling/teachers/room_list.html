@@ -4,11 +4,21 @@
 
 <h2>Available Rooms</h2>
 
-    {% for room in rooms %}
-    <p><a href="{{ room.id }}/">{{ room.name }}</a></p>
-    {% endfor %}
+{% for room in rooms %}
+<p><a href="{{ room.id }}/">{{ room.name }}</a></p>
+{% endfor %}
 
-    <br>
-    <p><a href="{% url 'teachers:create_room' %}">Create New Room</a></p>
+<br><h3>Create New Room</h3>
+
+{% load crispy_forms_tags %}  
+
+<form action="{% url 'teachers:create_room' %}" method="post">
+    {% csrf_token %}
+    <table>
+        {{ form|crispy }}
+    </table>
+    <input type="submit" value="Submit" class="btn btn-primary">
+</form>
+
     
 {% endblock %}

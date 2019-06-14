@@ -7,7 +7,7 @@ from django.contrib import messages
 import logging
 import datetime
 
-from ..forms import TeacherSignUpForm, RoomForm, TermForm, TimeSlotForm
+from ..forms import TeacherSignUpForm, RoomForm, TermForm, TimeSlotForm, UploadTimeSlotsForm
 from ..models import *
 from ..decorators import teacher_required
 
@@ -31,7 +31,8 @@ class TeacherSignUpView(CreateView):
 @teacher_required
 def room_list(request):
     rooms = Room.objects.filter(roomprivilege__user_id = request.user.id)
-    return render(request, 'scheduling/teachers/room_list.html', {'rooms': rooms})
+    form = RoomForm()
+    return render(request, 'scheduling/teachers/room_list.html', {'rooms': rooms, 'form': form})
 
 @login_required
 @teacher_required
@@ -45,12 +46,13 @@ def term_list(request, room_id):
 @login_required
 @teacher_required
 def create_term(request, room_id):
-    get_object_or_404(RoomPrivilege, room_id=room_id, user_id=request.user.id)
-    room = get_object_or_404(Room, pk=room_id)
-    term = RoomTerm(room_id = room, schedule_completed=False)
-    form = TermForm(request.POST, instance=term)
-    form.save()
-    return redirect('/scheduling/teachers/{}/'.format(room_id))
+    if (request.method == 'POST'):
+        get_object_or_404(RoomPrivilege, room_id=room_id, user_id=request.user.id)
+        room = get_object_or_404(Room, pk=room_id)
+        term = RoomTerm(room_id = room, schedule_completed=False)
+        form = TermForm(request.POST, instance=term)
+        form.save()
+        return redirect('/scheduling/teachers/{}/'.format(room_id))
 
 @login_required
 @teacher_required
@@ -103,7 +105,8 @@ def finalized_schedule(request, term):
 def unfinalized_schedule(request, term):
     time_slots = term.timeslot_set.all()
     room = term.room_id
-    form = TimeSlotForm()
+    single_add_form = TimeSlotForm()
+    file_upload_form = UploadTimeSlotsForm()
 
     schedule = {}
     users = User.objects.filter(roomprivilege__room_id = room.id, is_student = True)
@@ -128,7 +131,7 @@ def unfinalized_schedule(request, term):
         except:
             requirements[user.id] = -1
     return render(request, 'scheduling/teachers/unfinalized_schedule.html', 
-        {'room':room, 'term':term, 'schedule':schedule, 'form': form, 'options': options, 'requirements': requirements,})
+        {'room':room, 'term':term, 'schedule':schedule, 'single_add_form': single_add_form, 'options': options, 'requirements': requirements, 'file_upload_form': file_upload_form})
 
 @login_required
 @teacher_required
@@ -154,16 +157,22 @@ def update_schedule(request, room_id, term_id):
 @login_required
 @teacher_required
 def add_time_slot(request, room_id, term_id):
-    term = get_object_or_404(RoomTerm, pk=term_id)
-    time_slot = TimeSlot(room_term_id = term)
-    form = TimeSlotForm(request.POST, instance=time_slot)
-    form.save()
-    return redirect('/scheduling/teachers/{}/{}/'.format(room_id, term_id))
+    if (request.method == 'POST'):
+        term = get_object_or_404(RoomTerm, pk=term_id)
+        time_slot = TimeSlot(room_term_id = term)
+        form = TimeSlotForm(request.POST, instance=time_slot)
+        form.save()
+        return redirect('/scheduling/teachers/{}/{}/'.format(room_id, term_id))
+
+@login_required
+@teacher_required
+def import_time_slots_file(request, room_id, term_id):
+    logger.error(request.POST)
 
 @login_required
 @teacher_required
 def create_room(request):
-    if request.method == 'POST':
+    if (request.method == 'POST'):
         user = User.objects.get(pk=request.user.id)
         room = Room(owner=user)
         form = RoomForm(request.POST, instance=room)
@@ -171,9 +180,6 @@ def create_room(request):
         privilege = RoomPrivilege(user_id = user, room_id = room, privilege_level = 2)
         privilege.save()
         return redirect('/scheduling/teachers/')
-    else:
-        form = RoomForm()
-        return render(request, 'scheduling/teachers/create_update_room.html', {'form': form})
 
 @login_required
 @teacher_required
