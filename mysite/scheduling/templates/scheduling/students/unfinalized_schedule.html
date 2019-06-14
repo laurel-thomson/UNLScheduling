@@ -32,7 +32,7 @@
         <tbody>
             {% for slot, pref in schedule.items %}
                 <tr>
-                    <td>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</td>
+                    <td><strong>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</strong></td>
                     {% for option in options %}
                         <td>
                             <label for="{{slot.id}}_{{option.id}}"><font style="color:{{option.color_coding}}">{{option}}</font></kabel>

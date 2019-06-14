@@ -18,10 +18,20 @@
         </thead>
         <tbody>
         {% for slot, users in schedule.items %}
-            {% for user in users %}
+            {% for s_user in users %}
                 <tr>
-                    <td>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</td>
-                    <td>{{ user.user_id }}</td>
+                    <td><strong>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</strong></td>
+                    <td>
+                        {% if s_user.user_id|stringformat:"s" == user.username|stringformat:"s" %}
+                            <font style="color:#d00000">
+                            <strong>
+                        {% endif %}
+                            {{s_user.user_id}}
+                        {% if s_user.user_id == user.username %}
+                            </strong>
+                            </font>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             <!---This is a bit of a hack to force time slots without users to display in the datatable.  The datatable discovers groups from the rows in the table,
@@ -29,7 +39,7 @@
             {% if not users%}
                 <tr>
                     <td>
-                        {{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}
+                        <strong>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</strong>
                     </td>
                 <td height=""></td>
                 </tr>
