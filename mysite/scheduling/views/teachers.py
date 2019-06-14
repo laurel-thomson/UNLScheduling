@@ -6,6 +6,7 @@ from django.views.generic import CreateView
 from django.contrib import messages
 import logging
 import datetime
+import csv
 
 from ..forms import TeacherSignUpForm, RoomForm, TermForm, TimeSlotForm, UploadTimeSlotsForm
 from ..models import *
@@ -167,7 +168,21 @@ def add_time_slot(request, room_id, term_id):
 @login_required
 @teacher_required
 def import_time_slots_file(request, room_id, term_id):
-    logger.error(request.POST)
+    if request.method == 'POST' and request.FILES['file']:
+        try:
+            term = RoomTerm.objects.get(pk=term_id)
+            file = request.FILES['file'] 
+            decoded_file = file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+            for line in reader:
+                day = line["day"]
+                start_time = line["start_time"]
+                end_time = line["end_time"]
+                time_slot = TimeSlot(room_term_id=term, day=day, start_time=start_time, end_time=end_time)
+                time_slot.save()
+            return redirect('/scheduling/teachers/{}/{}'.format(room_id, term_id))
+        except Exception as e:
+            logger.error("Exception = {}".format(str(e)))
 
 @login_required
 @teacher_required

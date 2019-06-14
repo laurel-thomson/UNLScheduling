@@ -68,14 +68,25 @@
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
 
-    <h2 class="test">Add Time Slot</h2>
+    <h3>Add Time Slot</h3>
 
     <form action="{% url 'teachers:add_time_slot' room.id term.id %}" method="post">
         {% csrf_token %}
         <table>
-            {{ form|crispy }}
+            {{ single_add_form|crispy }}
         </table>
         <input type="submit" value="Add Time Slot"  class="btn btn-primary">
+    </form>
+
+    <h3>Import Time Slots from File</h3>
+
+
+    <form action="{% url 'teachers:import_time_slots_file' room.id term.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ file_upload_form|crispy }}
+        </table>
+        <input type="submit" value="Import Time Slots"  class="btn btn-primary">
     </form>
 
     <br>

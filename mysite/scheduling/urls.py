@@ -18,6 +18,7 @@ urlpatterns = [
         path('<int:room_id>/', teachers.term_list, name='term_list'),
         path('<int:room_id>/users', teachers.user_list, name='user_list'),
         path('<int:room_id>/<int:term_id>/add_time_slot', teachers.add_time_slot, name='add_time_slot'),
+        path('<int:room_id>/<int:term_id>/import_time_slots_file', teachers.import_time_slots_file, name='import_time_slots_file'),
         path('<int:room_id>/<int:term_id>/<int:slot_id>/delete_slot', teachers.delete_time_slot, name='delete_time_slot'),
         path('<int:room_id>/delete_room/', teachers.delete_room, name='delete_room'),
         path('<int:room_id>/<int:term_id>/delete_term', teachers.delete_term, name='delete_term'),
