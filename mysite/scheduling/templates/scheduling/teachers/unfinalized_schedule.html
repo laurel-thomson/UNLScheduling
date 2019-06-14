@@ -44,7 +44,7 @@
                             <a href="{% url 'teachers:delete_time_slot' room.id term.id slot.id %}" onclick="return confirm('Are you sure you want to delete this time slot?')"> x</a>
                         </td>
                         <td>
-                            <label for "{{slot.id}}_{{user.id}}" class="{{user.id}} font"><font style="color:{{user_schedule.preference.color_coding}}">{{user}}</font></label>
+                            <label for="{{slot.id}}_{{user.id}}" class="{{user.id}} font"><font style="color:{{user_schedule.preference.color_coding}}">{{user}}</font></label>
                             <input type="checkbox" onclick="checkSchedule(this, {{user.id}})" class="{{user.id}} input" name="{{slot.id}}_{{user.id}}" id="{{slot.id}}_{{user.id}}" {% if user_schedule.is_scheduled %}checked{% endif %}>
                         </td>
                     </tr>
