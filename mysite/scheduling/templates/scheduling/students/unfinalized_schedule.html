@@ -24,10 +24,9 @@
         <thead style="display:none;">
             <tr>
                 <td>Time Slot</td>
-                <td>Not Available</td>
-                <td>Available</td>
-                <td>Second Choice</td>
-                <td>First Choice</td>
+                {% for option in options %}
+                    <td>{{option}}</td>
+                {% endfor %}
             </tr>
         </thead>
         <tbody>
@@ -37,7 +36,7 @@
                     {% for option in options %}
                         <td>
                             <label for="{{slot.id}}_{{option.id}}"><font style="color:{{option.color_coding}}">{{option}}</font></kabel>
-                            <input type="checkbox" name="{{slot.id}}_{{option.id}}" id="{{slot.id}}_{{option.id}}" 
+                            <input type="radio" name="{{slot.id}}" id="{{slot.id}}_{{option.id}}" value="{{option.id}}"
                             {% if pref.preference_id.id == option.id %} 
                                 checked
                             {% elif not pref %}

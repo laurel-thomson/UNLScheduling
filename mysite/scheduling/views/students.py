@@ -66,9 +66,10 @@ def finalized_schedule(request, room, term):
 
 def unfinalized_schedule(request, room, term):
     if request.method == 'POST':
+        logger.error(request.POST)
         slots = term.timeslot_set.all()
         for slot in slots:
-            pref_option = get_object_or_404(PreferenceOption, name = request.POST.get(str(slot.id)))
+            pref_option = get_object_or_404(PreferenceOption, id = request.POST.get(str(slot.id)))
             SchedulePreference.objects.update_or_create(time_slot_id = slot, user_id = request.user, defaults = {'preference_id': pref_option})
         messages.success(request, 'Changes successfully saved.')
         return HttpResponseRedirect('')
