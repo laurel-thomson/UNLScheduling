@@ -180,9 +180,12 @@ def import_time_slots_file(request, room_id, term_id):
                 end_time = line["end_time"]
                 time_slot = TimeSlot(room_term_id=term, day=day, start_time=start_time, end_time=end_time)
                 time_slot.save()
+            messages.success(request, 'Time slots successfully imported.')
             return redirect('/scheduling/teachers/{}/{}'.format(room_id, term_id))
         except Exception as e:
             logger.error("Exception = {}".format(str(e)))
+            messages.error(request, 'There was an error processing your file.')
+            return redirect('/scheduling/teachers/{}/{}'.format(room_id, term_id))
 
 @login_required
 @teacher_required
