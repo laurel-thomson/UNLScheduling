@@ -24,6 +24,16 @@
                     <td>{{ user.user_id }}</td>
                 </tr>
             {% endfor %}
+            <!---This is a bit of a hack to force time slots without users to display in the datatable.  The datatable discovers groups from the rows in the table,
+            so, we add a row without any content if the time slots doesn't have any users.-->
+            {% if not users%}
+                <tr>
+                    <td>
+                        {{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}
+                    </td>
+                <td height=""></td>
+                </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
