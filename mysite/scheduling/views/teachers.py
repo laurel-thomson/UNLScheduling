@@ -113,13 +113,13 @@ def unfinalized_schedule(request, term):
             try:
                 pref = SchedulePreference.objects.get(user_id = user.id, time_slot_id = slot.id)
                 option = pref.preference_id
-                if (option.color_coding):
+                if (option.name != 'Not Available'):
                     schedule[slot][user] = {}
                     schedule[slot][user]["preference"] = option
                     schedule[slot][user]["is_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id = slot.id).exists()
             except:
                 pass
-    options = PreferenceOption.objects.filter(color_coding__isnull=False)
+    options = PreferenceOption.objects.exclude(name='Not Available')
     requirements = {}
     for user in users:
         try:
