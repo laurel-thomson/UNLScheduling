@@ -37,7 +37,14 @@
                     {% for option in options %}
                         <td>
                             <label for="{{slot.id}}_{{option.id}}"><font style="color:{{option.color_coding}}">{{option}}</font></kabel>
-                            <input type="checkbox" name="{{slot.id}}_{{option.id}}" id="{{slot.id}}_{{option.id}}" {% if pref.preference_id.id == option.id %}checked{% endif %}>
+                            <input type="checkbox" name="{{slot.id}}_{{option.id}}" id="{{slot.id}}_{{option.id}}" 
+                            {% if pref.preference_id.id == option.id %} 
+                                checked
+                            {% elif not pref %}
+                                {% if option.name == 'Not Available' %}
+                                    checked
+                                {% endif %}
+                            {% endif %}>
                         </td>
                     {% endfor %}
                 </tr>
