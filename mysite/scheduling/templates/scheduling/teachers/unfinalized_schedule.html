@@ -28,7 +28,7 @@
 
     <form action="{% url 'teachers:update_schedule' room.id term.id %}" method="post">
         {% csrf_token %}
-        <table id = "myTable" class="display nowrap">
+        <table class="display nowrap">
             <thead style="display:none;">
                 <tr>
                     <td>Time Slot</td>

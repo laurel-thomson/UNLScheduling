@@ -1,6 +1,6 @@
 $(document).ready( function () {
     var groupColumn = 0;
-    var table = $('#myTable').DataTable({
+    $('table.display').DataTable({
         "columnDefs": [
             { "visible": false, "targets": groupColumn }
         ],
