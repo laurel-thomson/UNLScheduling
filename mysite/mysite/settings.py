@@ -133,7 +133,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-        '/scheduling/static',
+        os.path.join(BASE_DIR, 'scheduling/static'),
     )
 
 # Custom Django auth settings
