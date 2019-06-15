@@ -206,7 +206,7 @@ def create_room(request):
         room = Room(owner=user)
         form = RoomForm(request.POST, instance=room)
         form.save()
-        privilege = RoomPrivilege(user_id = user, room_id = room, privilege_level = 2)
+        privilege = RoomPrivilege(user_id = user, room_id = room)
         privilege.save()
         return redirect('/scheduling/teachers/')
 
