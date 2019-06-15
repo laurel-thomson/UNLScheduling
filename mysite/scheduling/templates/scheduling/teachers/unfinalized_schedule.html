@@ -78,8 +78,12 @@
         <input type="submit" value="Add Time Slot"  class="btn btn-primary">
     </form>
 
-    <h3>Import Time Slots from File</h3>
+    <h3>Import Time Slots from CSV</h3>
 
+    <p>Your CSV file should be in the following format: </p>
+    <p>The first row needs to be a header row with this exact text: <blockquote class="blockquote">day,start_time,end_time</blockquote>
+    <p>The subsequent rows need to be in the format: &lt;day&gt;,&lt;HH:MM:SS&gt;,&lt;HH:MM:SS&gt;  For example: 
+    <blockquote class="blockquote">Monday,12:00:00,13:00:00</blockquote></p>
 
     <form action="{% url 'teachers:import_time_slots_file' room.id term.id %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
