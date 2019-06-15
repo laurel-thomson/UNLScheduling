@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
@@ -72,7 +71,7 @@ def unfinalized_schedule(request, room, term):
             pref_option = get_object_or_404(PreferenceOption, id = request.POST.get(str(slot.id)))
             SchedulePreference.objects.update_or_create(time_slot_id = slot, user_id = request.user, defaults = {'preference_id': pref_option})
         messages.success(request, 'Changes successfully saved.')
-        return HttpResponseRedirect('')
+        return redirect('/scheduling/students/{}/{}'.format(room.id, term.id))
     else:
         time_slots = term.timeslot_set.all()
         schedule = {}
@@ -83,5 +82,4 @@ def unfinalized_schedule(request, room, term):
             else:
                 schedule[slot] = None
         options = PreferenceOption.objects.all()
-
         return render(request, 'scheduling/students/unfinalized_schedule.html', {'room': room, 'schedule': schedule, 'options': options})
