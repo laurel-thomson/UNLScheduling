@@ -9,7 +9,6 @@ $(document).ready( function () {
         "paging": false,
         "ordering": false,
         "info": false,
-        "responsive": true,
         "drawCallback": function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'current'} ).nodes();
