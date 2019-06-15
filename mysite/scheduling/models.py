@@ -81,7 +81,6 @@ class SchedulePreference(models.Model):
 class RoomPrivilege(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
-    privilege_level = models.IntegerField()
 
     def __str__(self):
         return "{}: {}".format(self.user_id, self.room_id)
