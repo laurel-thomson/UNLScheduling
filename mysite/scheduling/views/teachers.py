@@ -69,20 +69,21 @@ def user_list(request, room_id):
         return HttpResponseRedirect('')
     else:
         students = User.objects.filter(roomprivilege__room_id = room_id, is_student = True)
+        teachers = User.objects.filter(roomprivilege__room_id = room.id, is_teacher = True)
         unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True)
         terms = room.roomterm_set.all()
 
-        user_data = {}
+        student_data = {}
         for term in terms:
-            user_data[term] = {}
+            student_data[term] = {}
             for user in students:
-                user_data[term][user] = {}
-                user_data[term][user]["submitted_preferences"] = SchedulePreference.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
-                user_data[term][user]["was_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
-                user_data[term][user]["student_type"] = get_object_or_404(Student, pk = user.id).student_type
-                if ScheduleRequirement.objects.filter(room_id = room.id, student_type = user_data[term][user]["student_type"].id).exists():
-                    user_data[term][user]["minimum_slots"] = get_object_or_404(ScheduleRequirement, room_id = room.id, student_type = user_data[term][user]["student_type"].id)
-        return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'user_data': user_data})
+                student_data[term][user] = {}
+                student_data[term][user]["submitted_preferences"] = SchedulePreference.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
+                student_data[term][user]["was_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
+                student_data[term][user]["student_type"] = get_object_or_404(Student, pk = user.id).student_type
+                if ScheduleRequirement.objects.filter(room_id = room.id, student_type = student_data[term][user]["student_type"].id).exists():
+                    student_data[term][user]["minimum_slots"] = get_object_or_404(ScheduleRequirement, room_id = room.id, student_type = student_data[term][user]["student_type"].id)
+        return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'student_data': student_data, 'teachers': teachers})
 
 @login_required
 @teacher_required

@@ -10,7 +10,7 @@
 
 <h2>Students in {{room.name}}</h2>
 
-<table class="display nowrap">
+<table class="display nowrap group">
     <thead>
         <tr>
             <td>Term</td>
@@ -22,8 +22,8 @@
         </tr>
     </thead>
     <tbody>
-    {% for term, users in user_data.items %}
-        {% for user, user_info in users.items %}
+    {% for term, students in student_data.items %}
+        {% for user, user_info in students.items %}
             <tr>
                 <td>{{term}}</td>
                 <td>{{user}} <a href="{% url 'teachers:remove_user' room.id user.id %}" onclick="return confirm('Are you sure you want to remove this student from the room?')">x</a> </td>
@@ -52,6 +52,32 @@
     {% endfor %}
     </tbody>
 </table>
+
+<h2>Teachers in {{room.name}}</h2>
+
+<table class="display nowrap nongroup">
+    <thead style="display:none;">
+        <tr>
+            <td>Teacher</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% for teacher in teachers %}
+            <tr>
+                <td>{{teacher}} 
+                {% if room.owner.id == user.id %}
+                    {% if teacher.id == user.id %}
+                        (owner)
+                    {% else %}
+                        <a href="{% url 'teachers:remove_user' room.id teacher.id %}" onclick="return confirm('Are you sure you want to remove this teacher from the room?')">x</a>
+                    {% endif %}
+                {% endif %}
+                </td>
+            </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 
 <h2>Add more users to the room</h2>
 

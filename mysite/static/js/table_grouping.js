@@ -1,14 +1,14 @@
 $(document).ready( function () {
     var groupColumn = 0;
-    $('table.display').DataTable({
+    $('table.group').DataTable({
         "columnDefs": [
             { "visible": false, "targets": groupColumn }
         ],
         "order": [[ groupColumn, 'asc' ]],
-        "displayLength": 25,
         "autoWidth": false,
         "paging": false,
         "ordering": false,
+        "info": false,
         "drawCallback": function ( settings ) {
             var api = this.api();
             var rows = api.rows( {page:'current'} ).nodes();
@@ -25,4 +25,11 @@ $(document).ready( function () {
             } );
         }
     } );
+    $('table.nongroup').DataTable({
+        "autoWidth": false,
+        "paging": false,
+        "ordering": false,
+        "searching": false,
+        "info": false,
+    });
 } );
