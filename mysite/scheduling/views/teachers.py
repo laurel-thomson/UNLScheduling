@@ -60,30 +60,40 @@ def create_term(request, room_id):
 def user_list(request, room_id):
     get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     room = get_object_or_404(Room, pk=room_id)
+    students = User.objects.filter(roomprivilege__room_id = room_id, is_student = True)
+    teachers = User.objects.filter(roomprivilege__room_id = room.id, is_teacher = True)
+    unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True).order_by("is_student")
+    terms = room.roomterm_set.all()
 
+    student_data = {}
+    for term in terms:
+        student_data[term] = {}
+        for user in students:
+            student_data[term][user] = {}
+            student_data[term][user]["submitted_preferences"] = SchedulePreference.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
+            student_data[term][user]["was_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
+            student_data[term][user]["student_type"] = get_object_or_404(Student, pk = user.id).student_type
+            if ScheduleRequirement.objects.filter(room_id = room.id, student_type = student_data[term][user]["student_type"].id).exists():
+                student_data[term][user]["minimum_slots"] = get_object_or_404(ScheduleRequirement, room_id = room.id, student_type = student_data[term][user]["student_type"].id)
+    return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'student_data': student_data, 'teachers': teachers})
+
+@login_required
+@teacher_required
+def add_users_to_room(request, room_id):
+    get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     if request.method == 'POST':
-        user_id = request.POST.get('users')
-        user = get_object_or_404(User, pk=user_id)
-        privilege = RoomPrivilege(user_id = user, room_id=room, privilege_level = 1)
-        privilege.save()
-        return HttpResponseRedirect('')
-    else:
-        students = User.objects.filter(roomprivilege__room_id = room_id, is_student = True)
-        teachers = User.objects.filter(roomprivilege__room_id = room.id, is_teacher = True)
+        logger.error("POST = {}".format(request.POST))
         unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True)
-        terms = room.roomterm_set.all()
-
-        student_data = {}
-        for term in terms:
-            student_data[term] = {}
-            for user in students:
-                student_data[term][user] = {}
-                student_data[term][user]["submitted_preferences"] = SchedulePreference.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
-                student_data[term][user]["was_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
-                student_data[term][user]["student_type"] = get_object_or_404(Student, pk = user.id).student_type
-                if ScheduleRequirement.objects.filter(room_id = room.id, student_type = student_data[term][user]["student_type"].id).exists():
-                    student_data[term][user]["minimum_slots"] = get_object_or_404(ScheduleRequirement, room_id = room.id, student_type = student_data[term][user]["student_type"].id)
-        return render(request, 'scheduling/teachers/user_list.html', {'room': room, 'unprivileged_users': unprivileged_users, 'student_data': student_data, 'teachers': teachers})
+        logger.error("unprivileged users = {}".format(unprivileged_users))
+        for user in unprivileged_users:
+            logger.error("user id = {}".format(user.id))
+            if request.POST.get(str(user.id)) == 'on':
+                logger.error("equals")
+                room = get_object_or_404(Room, pk=room_id)
+                privilege = RoomPrivilege(user_id = user, room_id=room)
+                privilege.save()
+        messages.success(request, "Users successfully added.")
+        return redirect('/scheduling/teachers/{}/users'.format(room_id))
 
 @login_required
 @teacher_required
@@ -221,6 +231,7 @@ def delete_term(request, room_id, term_id):
 def remove_user(request, room_id, user_id):
     privilege = get_object_or_404(RoomPrivilege, room_id=room_id, user_id=user_id)
     privilege.delete()
+    messages.success(request, "User successfully removed from room")
     return redirect('/scheduling/teachers/{}/users'.format(room_id))
 
 @login_required

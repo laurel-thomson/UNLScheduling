@@ -5,8 +5,13 @@
 {% block term_link %}<li><a href="{% url 'teachers:term_list' room.id %}">Terms</a></li>{% endblock %}
 {% block user_link %}<li class="active"><a href="{% url 'teachers:user_list' room.id %}">Users</a></li>{% endblock %}
     
-
 {% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 
 <h2>Students in {{room.name}}</h2>
 
@@ -52,8 +57,10 @@
     {% endfor %}
     </tbody>
 </table>
+<br><br>
 
 <h2>Teachers in {{room.name}}</h2>
+<br>
 
 <table class="display nowrap nongroup">
     <thead style="display:none;">
@@ -77,26 +84,47 @@
     {% endfor %}
     </tbody>
 </table>
+<br><br>
 
+{% if user.id == room.owner.id %}
 
-<h2>Add more users to the room</h2>
+<h3>Add More Users</h3>
 
-{% load crispy_forms_tags %}  
-<form action="" method="POST">
+    {% load crispy_forms_tags %} 
+    <form action="{% url 'teachers:add_users_to_room' room.id %}" method="POST">
     {% csrf_token %}
-    <div class="form-row">
-        <div class="form-group col-md-1 mb-0">
-            <select name="users">
+        <table class="display nowrap group">
+            <thead style="display:none;">
+                <tr>
+                    <td>User Type</td>
+                    <td>User Name</td>
+                </tr>
+            </thead>
+            <tbody>
                 {% for user in unprivileged_users %}
-                    <option value="{{user.id}}">{{user.username}}</option>
+                    <tr>
+                        <td>
+                            {% if user.is_student %}
+                                Students
+                            {% else %}
+                                Teachers
+                            {% endif %}
+                        </td>
+                        <td>
+                            <label for="{{user.id}}">{{user}}</label>
+                            <input type="checkbox" name="{{user.id}}" id="{{user.id}}">
+                        </td>
+                    </tr>
                 {% endfor %}
-            </select>
-        </div>
-        <div class="form-group col-md-1 mb-0">
-            <input type="submit" value="Submit" class="btn btn-primary">
-        </div>
-    </div>
-</form>
+            </tbody>
+        </table>
+        <br>
+    <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+
+    <br><br>
+
+{% endif %}
 
 {% load static %}
 <script type="text/javascript" src="{% static 'js/table_grouping.js' %}"></script>
