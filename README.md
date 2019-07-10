@@ -21,11 +21,13 @@ A test version of the website is available for viewing <a href="http://http://la
 
 To view the test data that has already been entered, you can log in with a few of these dummy accounts:
 
-username: teacher
+username: teacher  
+password: mypassword  
+
+
+username: student1  
 password: mypassword
 
-username: student1
-password: mypassword
 
-username: student2
+username: student2  
 password: mypassword
