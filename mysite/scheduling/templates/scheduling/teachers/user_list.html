@@ -31,7 +31,9 @@
         {% for user, user_info in students.items %}
             <tr>
                 <td>{{term}}</td>
-                <td>{{user}} <a href="{% url 'teachers:remove_user' room.id user.id %}" onclick="return confirm('Are you sure you want to remove this student from the room?')">x</a> </td>
+                <td>{{user.first_name}} {{user.last_name}}
+                    <a href="{% url 'teachers:remove_user' room.id user.id %}" onclick="return confirm('Are you sure you want to remove this student from the room?')">x</a> 
+                </td>
                 <td>
                     {{user_info.student_type}}
                 </td>
@@ -71,7 +73,7 @@
     <tbody>
     {% for teacher in teachers %}
             <tr>
-                <td>{{teacher}} 
+                <td>{{teacher.first_name}} {{teacher.last_name}}
                 {% if room.owner.id == user.id %}
                     {% if teacher.id == user.id %}
                         (owner)
@@ -111,7 +113,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            <label for="{{user.id}}">{{user}}</label>
+                            <label for="{{user.id}}">{{user.first_name}} {{user.last_name}}</label>
                             <input type="checkbox" name="{{user.id}}" id="{{user.id}}">
                         </td>
                     </tr>

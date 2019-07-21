@@ -26,8 +26,8 @@
                             <font style="color:#d00000">
                             <strong>
                         {% endif %}
-                            {{s_user.user_id}}
-                        {% if s_user.user_id == user.username %}
+                            {{ s_user.user_id.first_name }} {{ s_user.user_id.last_name }}
+                        {% if s_user.user_id|stringformat:"s" == user.username|stringformat:"s" %}
                             </strong>
                             </font>
                         {% endif %}

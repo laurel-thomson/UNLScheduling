@@ -22,7 +22,7 @@
             {% for user in users %}
                 <tr>
                     <td><strong>{{ slot.day }}: {{ slot.start_time }} - {{ slot.end_time }}</strong></td>
-                    <td>{{ user.user_id }}</td>
+                    <td>{{ user.user_id.first_name }} {{ user.user_id.last_name }}</td>
                 </tr>
             {% endfor %}
             <!---This is a bit of a hack to force time slots without users to display in the datatable.  The datatable discovers groups from the rows in the table,
