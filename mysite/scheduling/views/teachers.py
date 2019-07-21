@@ -7,7 +7,7 @@ import logging
 import datetime
 import csv
 
-from ..forms import TeacherSignUpForm, RoomForm, TermForm, TimeSlotForm, UploadTimeSlotsForm
+from ..forms import RoomForm, TermForm, TimeSlotForm, UploadTimeSlotsForm
 from ..models import *
 from ..decorators import teacher_required
 

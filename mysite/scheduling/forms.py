@@ -8,18 +8,10 @@ from .models import User, Room, RoomTerm, TimeSlot, StudentType, Student
 
 logger = logging.getLogger(__name__)
 
-class TeacherSignUpForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-    
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.is_teacher = True
-        if commit:
-            user.save()
-        return user
-
 class StudentSignUpForm(UserCreationForm):
+    first_name = forms.CharField(required=True, max_length=20, help_text='20 characters max.')
+    last_name = forms.CharField(required=True, max_length=20, help_text='20 characters max.')
+    
     student_type = forms.ModelChoiceField(
         queryset=StudentType.objects.all(),
         required=True
@@ -32,6 +24,8 @@ class StudentSignUpForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_student = True
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
         user.save()
         s_type = self.cleaned_data.get('student_type')
         student = Student.objects.create(user_id=user, student_type = s_type)
