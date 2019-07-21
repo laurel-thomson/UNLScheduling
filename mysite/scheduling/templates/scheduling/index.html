@@ -2,11 +2,15 @@
 
 {% block content %}
 
-<h2>Welcome to the scheduling home page!</h2>
+<h2>Welcome to the UNL Mathematics Scheduling website!  Log in or sign up to get started.</h2>
+
+    <h3>Students</h3>
 
     <p><a href="{% url 'students:room_list' %}">Log in as student</a></p>
 
     <p><a href="{% url 'student_signup' %}">Sign up for a student account</a></p>
+
+    <h3>Teachers</h3>
 
     <p><a href="{% url 'teachers:room_list' %}">Log in as teacher</a></p>
 
