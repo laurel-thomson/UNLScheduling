@@ -12,6 +12,7 @@ from ..decorators import student_required
 
 logger = logging.getLogger(__name__)
 
+#Users can only sign up for student accounts.  A student account can only be upgraded to a teacher account through the admin portal
 class StudentSignUpView(CreateView):
     model = User
     form_class = StudentSignUpForm
