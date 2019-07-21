@@ -55,7 +55,7 @@ def user_list(request, room_id):
         student_data[term] = {}
         for user in students:
             student_data[term][user] = {}
-            student_data[term][user]["submitted_preferences"] = SchedulePreference.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
+            student_data[term][user]["slots_submitted"] = SchedulePreference.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exclude(preference_id__name = 'Not Available').count()
             student_data[term][user]["was_scheduled"] = ScheduledUser.objects.filter(user_id = user.id, time_slot_id__room_term_id = term.id).exists()
             student_data[term][user]["student_type"] = get_object_or_404(Student, pk = user.id).student_type
             if ScheduleRequirement.objects.filter(room_id = room.id, student_type = student_data[term][user]["student_type"].id).exists():

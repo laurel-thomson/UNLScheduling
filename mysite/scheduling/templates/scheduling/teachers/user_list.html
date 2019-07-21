@@ -22,7 +22,7 @@
             <td>Student</td>
             <td>Student Type</td>
             <td>Hours Per Week</td>
-            <td>Submitted Preference?</td>
+            <td>Available Slots Submitted</td>
             <td>Was Scheduled?</td>
         </tr>
     </thead>
@@ -45,8 +45,8 @@
                     {% endif %}
                 </td>
                 <td>
-                    <font {% if user_info.submitted_preferences %} color="green" {% else %} color="red" {% endif %}>
-                        <strong>{{user_info.submitted_preferences}}</strong>
+                    <font {% if user_info.slots_submitted != 0 %} color="green" {% else %} color="red" {% endif %}>
+                        <strong>{{user_info.slots_submitted}}</strong>
                     </font>
                 </td>
                 <td>
