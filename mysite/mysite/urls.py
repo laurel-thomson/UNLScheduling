@@ -22,6 +22,5 @@ from scheduling.views import students, teachers, scheduling
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('scheduling/', include('scheduling.urls')),
-    path('accounts/signup/', students.StudentSignUpView.as_view(), name='signup'),
     path('', RedirectView.as_view(url='/scheduling')),
 ]

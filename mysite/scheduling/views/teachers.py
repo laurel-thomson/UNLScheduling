@@ -67,13 +67,9 @@ def user_list(request, room_id):
 def add_users_to_room(request, room_id):
     get_object_or_404(RoomPrivilege, user_id=request.user.id, room_id=room_id)
     if request.method == 'POST':
-        logger.error("POST = {}".format(request.POST))
         unprivileged_users = User.objects.exclude(roomprivilege__room_id = room_id).exclude(is_superuser = True)
-        logger.error("unprivileged users = {}".format(unprivileged_users))
         for user in unprivileged_users:
-            logger.error("user id = {}".format(user.id))
             if request.POST.get(str(user.id)) == 'on':
-                logger.error("equals")
                 room = get_object_or_404(Room, pk=room_id)
                 privilege = RoomPrivilege(user_id = user, room_id=room)
                 privilege.save()

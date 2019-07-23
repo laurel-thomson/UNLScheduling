@@ -139,7 +139,7 @@ CAS_RESPONSE_CALLBACKS = (
     'scheduling.onLogin',
 )
 
-CAS_AUTO_CREATE_USER = False
+CAS_AUTO_CREATE_USER = True
 
 # Third party apps configuration
 

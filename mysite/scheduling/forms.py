@@ -8,17 +8,20 @@ from .models import User, Room, RoomTerm, TimeSlot, StudentType, Student
 
 logger = logging.getLogger(__name__)
 
-class StudentSignUpForm(UserCreationForm):
+class SignUpForm(ModelForm):
     first_name = forms.CharField(required=True, max_length=20, help_text='20 characters max.')
     last_name = forms.CharField(required=True, max_length=20, help_text='20 characters max.')
-    
     student_type = forms.ModelChoiceField(
         queryset=StudentType.objects.all(),
         required=True
     )
 
-    class Meta(UserCreationForm.Meta):
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+
+    class Meta:
         model = User
+        fields = ('first_name', 'last_name', 'student_type')
 
     @transaction.atomic
     def save(self, commit=True):
@@ -31,19 +34,6 @@ class StudentSignUpForm(UserCreationForm):
         s_type = self.cleaned_data.get('student_type')
         student = Student.objects.create(user_id=user, student_type = s_type)
         return user
-
-class SignUpForm(ModelForm):
-    student_type = forms.ModelChoiceField(
-        queryset=StudentType.objects.all(),
-        required=True
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(SignUpForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'student_type')
 
 class RoomForm(ModelForm):
     def __init__(self, *args, **kwargs):

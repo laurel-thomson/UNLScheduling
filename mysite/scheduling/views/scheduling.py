@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
+import logging
 
 from ..models import Room, RoomTerm, TimeSlot, User
 from ..forms import SignUpForm
+
+logger = logging.getLogger(__name__)
 
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
@@ -17,17 +20,18 @@ def index(request):
 
 def onLogin(tree):
     username = tree[0][0].text
-    try:
-        User.objects.get(username=username)
-        return redirect('')
-    except:
+    user = User.objects.get(pk=username)
+
+    #If the user hasn't added in their information yet, prompt them to
+    if (not user.first_name):
         return redirect('signup/')
+    else:
+        return redirect('')
         
 
 def signup(request):
     if (request.method == 'POST'):
-        #save the user info here
-        pass
+        return index(request)
     else:
         form = SignUpForm()
         return render(request, 'scheduling/signup.html', {'form': form})

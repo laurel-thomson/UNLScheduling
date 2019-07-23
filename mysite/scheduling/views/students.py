@@ -6,26 +6,10 @@ from django import forms
 import logging
 from django.contrib import messages
 
-from ..forms import StudentSignUpForm
 from ..models import *
 from ..decorators import student_required
 
 logger = logging.getLogger(__name__)
-
-#Users can only sign up for student accounts.  A student account can only be upgraded to a teacher account through the admin portal
-class StudentSignUpView(CreateView):
-    model = User
-    form_class = StudentSignUpForm
-    template_name = 'registration/signup_form.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs['user_type'] = 'student'
-        return super().get_context_data(**kwargs)
-
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('/scheduling/students/')
 
 
 @login_required
