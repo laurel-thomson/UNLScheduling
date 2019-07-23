@@ -32,6 +32,19 @@ class StudentSignUpForm(UserCreationForm):
         student = Student.objects.create(user_id=user, student_type = s_type)
         return user
 
+class SignUpForm(ModelForm):
+    student_type = forms.ModelChoiceField(
+        queryset=StudentType.objects.all(),
+        required=True
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(SignUpForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'student_type')
+
 class RoomForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(RoomForm, self).__init__(*args, **kwargs)

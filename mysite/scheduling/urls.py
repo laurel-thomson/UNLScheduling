@@ -4,11 +4,12 @@ import cas.views
 from .views import scheduling, students, teachers
 
 urlpatterns = [
-    path('', scheduling.index, name='index'),
+    path('', scheduling.signup, name='index'),
 
     # CAS
     path('login/', cas.views.login, name='login'),
     path('logout/', cas.views.logout, name='logout'),
+    path('signup/', scheduling.signup, name='signup'),
 
     path('students/', include(([
         path('', students.room_list, name='room_list'),

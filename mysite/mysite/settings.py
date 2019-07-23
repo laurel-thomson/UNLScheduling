@@ -135,6 +135,12 @@ LOGIN_REDIRECT_URL = 'index'
 
 LOGOUT_REDIRECT_URL = 'index'
 
+CAS_RESPONSE_CALLBACKS = (
+    'scheduling.onLogin',
+)
+
+CAS_AUTO_CREATE_USER = False
+
 # Third party apps configuration
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
