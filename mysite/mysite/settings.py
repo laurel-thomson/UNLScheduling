@@ -120,7 +120,7 @@ STATICFILES_DIRS = (
 
 # AUTH
 
-CAS_SERVER_URL = "https://login.unl.edu/cas/"
+CAS_SERVER_URL = "https://shib.unl.edu/idp/profile/cas/"
 
 CAS_LOGOUT_COMPLETELY = True
 CAS_PROVIDE_URL_TO_LOGOUT = True
