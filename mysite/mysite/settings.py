@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = [ 'laurelthomson.pythonanywhere.com', 'localhost']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'scheduling.apps.SchedulingConfig',
     'crispy_forms',
+    'cas',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cas.middleware.CASMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -94,25 +95,6 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -136,13 +118,18 @@ STATICFILES_DIRS = (
         os.path.join(BASE_DIR, 'scheduling/static/scheduling'),
     )
 
-# Custom Django auth settings
+# AUTH
+
+CAS_SERVER_URL = "https://login.unl.edu/cas/"
+
+CAS_LOGOUT_COMPLETELY = True
+CAS_PROVIDE_URL_TO_LOGOUT = True
+
+AUTHENTICATION_BACKENDS = (
+    'cas.backends.CASBackend',
+)
 
 AUTH_USER_MODEL = 'scheduling.User'
-
-LOGIN_URL = 'login'
-
-LOGOUT_URL = 'logout'
 
 LOGIN_REDIRECT_URL = 'index'
 

@@ -26,6 +26,7 @@ class StudentSignUpForm(UserCreationForm):
         user.is_student = True
         user.first_name = self.cleaned_data.get('first_name')
         user.last_name = self.cleaned_data.get('last_name')
+        setattr(user, 'backend', 'cas.backends.CASBackend')
         user.save()
         s_type = self.cleaned_data.get('student_type')
         student = Student.objects.create(user_id=user, student_type = s_type)
