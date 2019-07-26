@@ -91,3 +91,7 @@ h1, h2 {
   .navbar-default .navbar-toggle:focus {
     background-color: transparent;
   }
+
+input {
+    max-width: 45em;
+}
