@@ -34,7 +34,6 @@ class Room(models.Model):
 class RoomTerm(models.Model):
     name = models.CharField('Name', max_length=50)
     room_id = models.ForeignKey(Room, on_delete=models.CASCADE)
-    available_until = models.DateTimeField()
     schedule_completed = models.BooleanField('Schedule completed', default=False)
 
     def __str__(self):

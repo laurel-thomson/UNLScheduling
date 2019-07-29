@@ -40,9 +40,6 @@ class RoomForm(ModelForm):
         model = Room
         fields = ('name',)
 
-class DateInput(forms.DateInput):
-    input_type = 'date'
-
 class TimeInput(forms.DateInput):
     input_type = 'time'
 
@@ -53,10 +50,7 @@ class TermForm(ModelForm):
 
     class Meta:
         model = RoomTerm
-        fields = ('name', 'available_until')
-        widgets = {
-            'available_until': DateInput(),
-        }
+        fields = ('name',)
 
 class TimeSlotForm(ModelForm):
     def __init__(self, *args, **kwargs):
