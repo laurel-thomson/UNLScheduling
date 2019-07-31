@@ -26,7 +26,7 @@ urlpatterns = [
         path('<int:room_id>/remove_user/<int:user_id>', teachers.remove_user, name='remove_user'),
         path('<int:room_id>/<int:term_id>/finalize/', teachers.finalize_schedule, name='finalize_schedule'),
         path('<int:room_id>/<int:term_id>/unfinalize/', teachers.unfinalize_schedule, name='unfinalize_schedule'),
-        path('<int:room_id><int:term_id>/update_schedule', teachers.update_schedule, name='update_schedule'),
+        path('<int:room_id>/<int:term_id>/update_schedule', teachers.update_schedule, name='update_schedule'),
         path('<int:room_id>/<int:term_id>/', teachers.term_detail, name='term_detail'),
     ], 'scheduling'), namespace='teachers')),
 ]
