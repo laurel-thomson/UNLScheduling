@@ -25,11 +25,4 @@ $(document).ready( function () {
             } );
         }
     } );
-    $('table.nongroup').DataTable({
-        "autoWidth": false,
-        "paging": false,
-        "ordering": false,
-        "searching": false,
-        "info": false,
-    });
 } );
