@@ -3,7 +3,7 @@
 This is a scheduling application created for Dr. Josh Brummer from the University of Nebraska, Lincoln Mathematics Department.  The purpose
 of the web app is to streamline the process of scheduling students to work in the UNL Math Resource Center.  The website allows students
 to mark their availability and scheduling preferences for each time slot in the resource center.  Teachers can then view a master scheduling
-list, where each time slots contains all of the students that have marked that time slots as "available".  The teacher can then 
+list, where each time slot contains all of the students that have marked that time slot as "available".  The teacher can then 
 select which student(s) to schedule for the particular time slot.  Once the teacher releases the schedule, students are able to view
 the published schedule.
 
@@ -156,7 +156,7 @@ If you added a new model and would like to be able to manage it from the admin s
 
 ## Views
 
-The <a href="https://docs.djangoproject.com/en/2.2/topics/http/views/">Views</a> are located in `scheduling/views`.  A View is simply a Python function that takes a web request and returns a web response.  The Views are responsible for rendering the HTML templates.  There are three namespaces: scheduling, students, and teachers.  The students and teachers namespaces contain Views that are specific to students and teachers, respectively.  The scheduling namespace contains Views that are not specific to either students or teachers.
+The <a href="https://docs.djangoproject.com/en/2.2/topics/http/views/">Views</a> are located in `scheduling/views`.  A View is simply a Python function that takes in a web request and returns a web response.  The Views are responsible for rendering the HTML templates.  There are three namespaces: scheduling, students, and teachers.  The students and teachers namespaces contain Views that are specific to students and teachers, respectively.  The scheduling namespace contains Views that are not specific to either students or teachers.
 
 ### Database API
 
@@ -165,7 +165,7 @@ The Views make several queries using the <a href="https://docs.djangoproject.com
 ### Decorators
 
 Access to Views is managed using <a href="https://docs.djangoproject.com/en/2.2/topics/http/decorators/">View decorators</a>.
-Views with the @login_required decorator can only be accessed by an authenticated user, Views with the @teacher_required can only be accessed by a user with `is_teacher == True`.  The decorators can be manage from `decorators.py` in the scheduling directory.  Make sure you add the appropriate decorators to any new Views you create.
+Views with the @login_required decorator can only be accessed by an authenticated user, Views with the @teacher_required can only be accessed by a user with `is_teacher == True`.  The decorators can be managed from `decorators.py` in the scheduling directory.  Make sure you add the appropriate decorators to any new Views you create.
 
 ## URLs
 
