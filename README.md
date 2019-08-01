@@ -150,6 +150,23 @@ Next, run the migrations;
 
 `$ python manage.py migrate`
 
+If you added a new model and would like to be able to manage it from the admin site, you will need to register it.  In `admin.py` located within the `scheduling` directory, add the following line:  
+
+`admin.site.register(<ModelName>)`
+
+## Views
+
+The <a href="https://docs.djangoproject.com/en/2.2/topics/http/views/">Views</a> are located in `scheduling/views`.  A View is simply a Python function that takes a web request and returns a web response.  The Views are responsible for rendering the HTML templates.  There are three namespaces: scheduling, students, and teachers.  The students and teachers namespaces contain Views that are specific to students and teachers, respectively.  The scheduling namespace contains Views that are not specific to either students or teachers.
+
+### Database API
+
+The Views make several queries using the <a href="https://docs.djangoproject.com/en/2.2/topics/db/queries/">Django Database API</a>.  The API provides a convenient layer of abstraction for interacting with the Django models.
+
+### Decorators
+
+Access to Views is managed using <a href="https://docs.djangoproject.com/en/2.2/topics/http/decorators/">View decorators</a>.
+Views with the @login_required decorator can only be accessed by an authenticated user, Views with the @teacher_required can only be accessed by a user with `is_teacher == True`.  The decorators can be manage from `decorators.py` in the scheduling directory.  Make sure you add the appropriate decorators to any new Views you create.
+
 ## Common Problems
 
 When I try to run any `manage.py` commands, I get the following error:  
