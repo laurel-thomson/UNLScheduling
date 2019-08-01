@@ -209,4 +209,4 @@ When I try to run any `manage.py` commands, I get the following error:
 ```
 
 **Solution**:  
-Make sure your virtual environment has been started (see **Running the Application** section).
+Make sure your virtual environment has been started (see <a href="#starting-the-virtualenv">**Starting the Virtualenv**</a>).
