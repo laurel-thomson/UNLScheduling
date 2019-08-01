@@ -42,12 +42,16 @@ password: mypassword
 ### Virtual Environment
 Download or clone the repository and navigate to the root directory of the repo.  Make a virtualenv called myvenv that will isolate your Python/Django setup:  
 
+**Windows**  
+`python -m venv myvenv`  
+
+**Linux/OS X**  
 `$ python3 -m venv myvenv`
 
 Start your virtualenv:
 
 **Windows**  
-`$ myvenv\Scripts\activate`
+`myvenv\Scripts\activate`
 
 **Linux/OS X**  
 `$ source myvenv/bin/activate`
@@ -56,16 +60,16 @@ If your virtualenv has been successfully activated, your console prompt will be 
 
 ### Installing Requirements
 Make sure that pip is up-to-date:  
-`python -m pip install --upgrade pip`
+`$ python -m pip install --upgrade pip`
 
 Run the following command to install Django and all other project requirements:  
-`pip install -r requirements.txt`
+`$ pip install -r requirements.txt`
 
 ### Migrating the database
 
-You will need to apply all of the database migrations to your SQLite3 database instance:  
+You will need to apply all of the database migrations to your SQLite3 database instance.  Navigate to the mysite directory (located at the top level of the repository) and issue the following command:  
 
-`python manage.py migrate`
+`$ python manage.py migrate`
 
 You are now ready to run the web app!
 
@@ -76,7 +80,7 @@ You are now ready to run the web app!
 Start the virtual environment, if you haven't already:  
 
 **Windows**  
-`$ myvenv\Scripts\activate`
+`myvenv\Scripts\activate`
 
 **Linux/OS X**  
 `$ source myvenv/bin/activate`
@@ -87,4 +91,4 @@ Navigate to the mysite directory, located at the top level of the repository.
 
 ### Starting the Server
 
-`python manage.py runserver`
+`$ python manage.py runserver`
