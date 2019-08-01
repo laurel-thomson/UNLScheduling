@@ -40,7 +40,7 @@ password: mypassword
 <a href="https://pip.pypa.io/en/stable/">pip</a> - included by default with Python 3.4  
 
 ### Virtual Environment
-Download or clone the repository and navigate to the root directory of the repo.  Make a virtualenv called myvenv that will isolate your Python/Django setup:  
+Download or clone the repository and navigate to the root directory of the repo.  Make a virtualenv called `myvenv` that will isolate your Python/Django setup:  
 
 **Windows**  
 `python -m venv myvenv`  
@@ -67,7 +67,7 @@ Run the following command to install Django and all other project requirements:
 
 ### Migrating the database
 
-You will need to apply all of the database migrations to your SQLite3 database instance.  Navigate to the mysite directory (located at the top level of the repository) and issue the following command:  
+You will need to apply all of the database migrations to your SQLite3 database instance.  Navigate to the `mysite` directory (located at the top level of the repository) and issue the following command:  
 
 `$ python manage.py migrate`
 
@@ -87,8 +87,27 @@ Start the virtual environment, if you haven't already:
 
 If your console prompt is prefaced with `(myvenv)`, your virtualenv has been activated.
 
-Navigate to the mysite directory, located at the top level of the repository.
+Navigate to the `mysite` directory, located at the top level of the repository.
 
 ### Starting the Server
 
 `$ python manage.py runserver`
+
+## Admin Site
+
+The admin site is located at `/admin/`, for example: `http://localhost:8000/admin`.  This is where an administrative user can view and edit database models.  In order to access the admin site, the authenticated user must have superuser status.  
+
+Although a user can be upgraded to superuser status from the admin site, this is not helpful until you have at least one user with superuser status :)  Fortunately, a user can be upgraded to superuser status from the Django shell.
+
+Make sure your virtualenv is started (see **Running the Application**). In the top-level `mysite` directory, start the Django shell:  
+
+`$ python manage.py shell`  
+
+Once the interactive console has started, fetch your User from the database:  
+
+```
+from django.contrib.auth.models import User  
+user = User.objects.get(username="myname")
+user.is_superuser = True
+user.save()
+```
