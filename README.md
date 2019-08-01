@@ -194,6 +194,10 @@ The rest of the HTML templates are located in `scheduling/templates/scheduling`.
 
 The templates use the <a href="https://docs.djangoproject.com/en/2.2/ref/templates/language/">Django Template Language</a> to populate the template with variables passed in from the View that is rendering the template.
 
+## JQuery DataTables
+
+The scheduling app uses <a href="https://datatables.net/">JQuery DataTables</a> to display the user and scheduling tabular data.  The Javascript for rendering a table as a DataTable is located in `scheduling/static/js`.  This script finds all tables in the DOM with the class "group" and displays the table as a DataTable, grouping all of the rows by the first column.
+
 ## Common Problems
 
 When I try to run any `manage.py` commands, I get the following error:  
