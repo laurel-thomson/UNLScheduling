@@ -65,11 +65,17 @@ Make sure that pip is up-to-date:
 Run the following command to install Django and all other project requirements:  
 `$ pip install -r requirements.txt`
 
-### Migrating the database
+### Migrating the Database
 
 You will need to apply all of the database migrations to your SQLite3 database instance.  Navigate to the `mysite` directory (located at the top level of the repository) and issue the following command:  
 
 `$ python manage.py migrate`
+
+### Populating the Database
+
+There is a script located in scheduling/management/commands that adds a few starting items into the database (PreferenceOptions and StudentType).  Run the script:  
+
+`$ python manage.py populate_db`
 
 You are now ready to run the web app!
 
@@ -99,6 +105,8 @@ The admin site is located at `/admin/`, for example: `http://localhost:8000/admi
 
 Although a user can be upgraded to superuser status from the admin site, this is not helpful until you have at least one user with superuser status :)  Fortunately, a user can be upgraded to superuser status from the Django shell.
 
+### Upgrading to Superuser Status
+
 Make sure your virtualenv is started (see **Running the Application**). In the top-level `mysite` directory, start the Django shell:  
 
 `$ python manage.py shell`  
@@ -106,8 +114,51 @@ Make sure your virtualenv is started (see **Running the Application**). In the t
 Once the interactive console has started, fetch your User from the database:  
 
 ```
-from django.contrib.auth.models import User  
+from scheduling.models import User  
 user = User.objects.get(username="myname")
+user.is_staff = True
+user.is_teacher = True
 user.is_superuser = True
 user.save()
+quit()
 ```
+
+You should now be able to log into the admin site using the User account you just upgraded.
+
+### Managing from Admin
+
+Some of the functionality of the app is only available from the admin portal.  You will need to use the admin portal to manage StudentTypes, SchedulingRequirements, PreferenceOptions, and User permissions.
+
+**StudentTypes**  
+The populate_db script that we ran when setting up the app will add one Student Type - "Other".  You will need to manually add in any other StudentTypes that you would like.  These are the options that students will be choose from them when they first set up their account.
+
+**SchedulingRequirements**  
+Once you've created a Room, you will need to create a SchedulingRequirement from each StudentType that will be included in the Room.  This represents the number of hours that the student is required to work in the Room.
+
+**PreferenceOptions**  
+These are the options that students have to choose from when submitting their preferences, along with the color coding used in the website.
+
+**User Permissions**
+You will need to use the admin portal to upgrade a student to a teacher or admin.
+
+## Updating the Database
+To make any updates to the database models, edit the `models.py` file and save.  Then, you will need to create the migrations file:  
+
+`$ python manage.py makemigrations`  
+
+Next, run the migrations;
+
+`$ python manage.py migrate`
+
+## Common Problems
+
+When I try to run any `manage.py` commands, I get the following error:  
+
+```
+  File "manage.py", line 14
+    ) from exc
+         ^
+```
+
+**Solution**:  
+Make sure your virtual environment has been started (see **Running the Application** section).
