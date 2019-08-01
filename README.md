@@ -167,6 +167,33 @@ The Views make several queries using the <a href="https://docs.djangoproject.com
 Access to Views is managed using <a href="https://docs.djangoproject.com/en/2.2/topics/http/decorators/">View decorators</a>.
 Views with the @login_required decorator can only be accessed by an authenticated user, Views with the @teacher_required can only be accessed by a user with `is_teacher == True`.  The decorators can be manage from `decorators.py` in the scheduling directory.  Make sure you add the appropriate decorators to any new Views you create.
 
+## URLs
+
+The `urls.py` file, located in the scheduling directory, provides a mapping of URL patterns to Views.  The URL patterns contain query parameters contained within angle brackets.  These parameters are then passed to the View:  
+
+`path('<int:room_id>/', teachers.term_list, name='term_list'),`
+
+In the View:  
+
+```
+def term_list(request, room_id):
+  ...
+```
+
+The URLs are all given names, which can be used to call the URL from within a template.  This provides a layer of abstraction that allows us to reformat a URL pattern without breaking the HTML templates.  The URL can be called using its name and namespace, for example:
+
+`<a href="{% url 'students:term_list' room.id %}">Terms</a>`
+
+Note that any URL query parameters are passed after the URL name, in order and separated by spaces.
+
+## Templates
+
+There is a `base.html` template in the `mysite/templates` directory.  This is the top level template for all HTML pages in the project.  There are two additional widely used templates: `in_room_base_student.html` and `in_room_base_teacher.html`, located within the same directory.  These templates are used to provide the different navigation bars available to students and teachers, once they have entered a specific room.
+
+The rest of the HTML templates are located in `scheduling/templates/scheduling`.  Do not try to flatten this directory structure! :)  These templates extend one of the above templates, inserting their own content using the `block` tags.
+
+The templates use the <a href="https://docs.djangoproject.com/en/2.2/ref/templates/language/">Django Template Language</a> to populate the template with variables passed in from the View that is rendering the template.
+
 ## Common Problems
 
 When I try to run any `manage.py` commands, I get the following error:  
