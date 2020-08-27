@@ -26,7 +26,7 @@ SECRET_KEY = '933ymr_%8l7s)i**(=rxz^o$xw1*gqzb#+a0yzv9e7_3hc-l1s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'laurelthomson.pythonanywhere.com', 'localhost']
+ALLOWED_HOSTS = [ 'jbrummer.pythonanywhere.com', 'localhost']
 
 
 # Application definition
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'scheduling.apps.SchedulingConfig',
     'crispy_forms',
+
+    'OER',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +60,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'OER', 'html'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -151,3 +154,7 @@ LOGOUT_REDIRECT_URL = 'index'
 # Third party apps configuration
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

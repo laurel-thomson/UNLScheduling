@@ -1,0 +1,97 @@
+body {
+  padding-left: 5%;
+  padding-right: 5%;
+  background-color:#f5f1e7;
+  font-family: 'Montserrat';
+}
+
+@media only screen and (max-width: 600px) {
+  .responsive td {
+    display: inline-block;
+  }
+}
+
+tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+}
+
+h1, h2 {
+    color: #d00000;
+    font-family: 'Montserrat';
+    font-weight: 600;
+}
+
+.jumbotron {
+    background-color: transparent;
+}
+
+.jumbotron h1 {
+    padding-top: 20px;
+    color: #404040;
+}
+
+.navbar-default {
+    background-color:#d00000;
+    background-image: none;
+    background-repeat: no-repeat;
+   }
+
+.nav.navbar-nav li a {
+    color: #fcf5e5;
+    font-weight:700;
+    font-size:1.1em;
+}
+
+.navbar-nav li a:hover, .navbar-nav > .active > a {
+    background-color:#fcf5e5 !important;
+    background-image: none !important;
+  }
+
+.navbar-text {
+    color: #fcf5e5 !important;
+}
+
+.nav.navbar-nav li a:hover {
+    color: #000000;
+}
+
+.navbar-default .navbar-brand {
+    color: #f5f1e7;
+}
+
+.navbar-default .navbar-brand:visited {
+    color: #f5f1e7;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: #000000;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+    background: none;
+    float: left; 
+  }
+  .navbar-default .navbar-toggle .icon-bar {
+    background-color: #f5f1e7;
+  }
+  .navbar-default .navbar-toggle:hover .icon-bar {
+    background-color: #000;
+  }
+
+  .navbar-default .navbar-toggle:focus .icon-bar {
+    background-color: #000;
+  }
+  
+  .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+  }
+
+  .navbar-default .navbar-toggle:focus {
+    background-color: transparent;
+  }
+
+input {
+    max-width: 45em;
+}

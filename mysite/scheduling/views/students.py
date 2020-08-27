@@ -24,6 +24,8 @@ class StudentSignUpView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        room = get_object_or_404(Room,name='Math Resource Center')
+        RoomPrivilege.objects.update_or_create(user_id = user, room_id = room)
         login(self.request, user)
         return redirect('/scheduling/students/')
 
@@ -42,7 +44,7 @@ def term_list(request, room_id):
     terms = RoomTerm.objects.filter(room_id=room_id)
     room = get_object_or_404(Room, pk=room_id)
     return render(request, 'scheduling/students/term_list.html', {'terms': terms, 'room': room })
-    
+
 @login_required
 @student_required
 def term_detail(request, room_id, term_id):

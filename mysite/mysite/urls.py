@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
-
 from scheduling.views import students, teachers, scheduling
+
+from OER import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', students.StudentSignUpView.as_view(), name='signup'),
     path('', RedirectView.as_view(url='/scheduling')),
+
+    path('OER/', views.index, name='OER_index'),
 ]
